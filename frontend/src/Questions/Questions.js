@@ -11,7 +11,7 @@ class Questions extends Component {
   }
 
   async componentDidMount() {
-    const questions = (await axios.get("http://localhost:8081")).data;
+    const questions = (await axios.get("/api/questions")).data; //https://tourmapper-backend.herokuapp.com
     this.setState({
       questions
     });

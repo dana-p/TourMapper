@@ -22,7 +22,7 @@ class Question extends Component {
       match: { params }
     } = this.props;
     const question = (await axios.get(
-      `http://localhost:8081/${params.questionId}`
+      `/api/question/${params.questionId}` // `https://tourmapper-backend.herokuapp.com/${params.questionId}`
     )).data;
     this.setState({
       question
@@ -30,7 +30,7 @@ class Question extends Component {
   }
 
   async submitAnswer(answer){
-      await axios.post(`http://localhost:8081/answer/${this.state.question.id}`, 
+      await axios.post(`/api/questions/answer/${this.state.question._id}`, // `https://tourmapper-backend.herokuapp.com/answer/${this.state.question._id}`
       {
           answer,
       }, {

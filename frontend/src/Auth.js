@@ -2,11 +2,12 @@ import auth0 from "auth0-js";
 
 class Auth {
   constructor() {
+
     this.auth0 = new auth0.WebAuth({
       domain: "tour-mapper.auth0.com",
       audience: "https://tour-mapper.auth0.com/userinfo",
       clientID: "LrUWUhZTWmwi0ire5GDCN3F4RUaxJJ62",
-      redirectUri: "http://localhost:3000/callback",
+      redirectUri: this.getUri() + '/callback',
       responseType: "id_token",
       scope: "openid profile"
     });
@@ -16,6 +17,15 @@ class Auth {
     this.isAuthenticated = this.isAuthenticated.bind(this);
     this.signIn = this.signIn.bind(this);
     this.signOut = this.signOut.bind(this);
+  }
+
+  getUri(){
+    if (process.env.NODE_ENV === 'production'){
+      return 'https://tour-mapper.herokuapp.com'
+    }
+    else {
+      return 'http://localhost:3000'
+    }
   }
 
   getProfile() {
@@ -57,7 +67,7 @@ class Auth {
 
   signOut() {
     this.auth0.logout({
-        returnTo:'http://localhost:3000', 
+        returnTo:this.getUri(), 
         clientID: 'LrUWUhZTWmwi0ire5GDCN3F4RUaxJJ62'
     })
   }
