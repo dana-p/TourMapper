@@ -57,16 +57,21 @@ require('./server/api')(app, config);
  | Routes
  |--------------------------------------
  */
-// Pass routing to Angular app
-// Don't run in dev
-//if (process.env.NODE_ENV !== 'dev') {
+
+// Pass routing to React app
+if (process.env.NODE_ENV !== 'dev') {
   app.use(express.static(path.join(__dirname, 'frontend','build')));
   app.get('/*', function (req, res) {
     res.sendFile(path.join(__dirname, 'frontend','build','index.html'));
   });
-//}else{
- // mongoose.set('debug', true);
-//}
+}else{
+  mongoose.set('debug', true);
+}
+
+//build mode
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname+'/client/public/index.html'));
+})
 
 /*
  |--------------------------------------
