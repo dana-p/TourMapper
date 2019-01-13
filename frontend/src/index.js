@@ -9,16 +9,8 @@ import auth from "./Auth";
 import ApolloClient from "apollo-boost";
 import { ApolloProvider } from "react-apollo";
 
-function getUri() {
-  if (process.env.NODE_ENV === "production") {
-    return "https://tour-mapper.herokuapp.com/graphql";
-  } else {
-    return "http://localhost:4000/graphql";
-  }
-}
-
 const client = new ApolloClient({
-  uri: "https://tour-mapper.herokuapp.com",
+  uri: "/graphql",
   request: operation => {
     operation.setContext(context => ({
       headers: {
