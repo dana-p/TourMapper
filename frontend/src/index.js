@@ -18,7 +18,7 @@ function getUri() {
 }
 
 const client = new ApolloClient({
-  uri: "https://tour-mapper.herokuapp.com/graphql",
+  uri: "https://tour-mapper.herokuapp.com",
   request: operation => {
     operation.setContext(context => ({
       headers: {
