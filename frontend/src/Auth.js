@@ -2,14 +2,14 @@ import auth0 from "auth0-js";
 
 class Auth {
   constructor() {
-
     this.auth0 = new auth0.WebAuth({
       domain: "tour-mapper.auth0.com",
       audience: "https://tour-mapper.auth0.com/userinfo",
       clientID: "LrUWUhZTWmwi0ire5GDCN3F4RUaxJJ62",
-      redirectUri: this.getUri() + '/callback',
+      redirectUri: this.getUri() + "/callback",
       responseType: "id_token",
-      scope: "openid profile"
+      scope: "openid profile",
+      issuer: "https://tour-mapper.auth0.com"
     });
 
     this.getProfile = this.getProfile.bind(this);
@@ -19,12 +19,11 @@ class Auth {
     this.signOut = this.signOut.bind(this);
   }
 
-  getUri(){
-    if (process.env.NODE_ENV === 'production'){
-      return 'https://tour-mapper.herokuapp.com'
-    }
-    else {
-      return 'http://localhost:3000'
+  getUri() {
+    if (process.env.NODE_ENV === "production") {
+      return "https://tour-mapper.herokuapp.com";
+    } else {
+      return "http://localhost:3000";
     }
   }
 
@@ -67,19 +66,19 @@ class Auth {
 
   signOut() {
     this.auth0.logout({
-        returnTo:this.getUri(), 
-        clientID: 'LrUWUhZTWmwi0ire5GDCN3F4RUaxJJ62'
-    })
+      returnTo: this.getUri(),
+      clientID: "LrUWUhZTWmwi0ire5GDCN3F4RUaxJJ62"
+    });
   }
 
-  silentAuth(){
-      return new Promise((resolve, reject)=>{
-          this.auth0.checkSession({}, (err, authResult)=>{
-              if (err) return reject(err); 
-              this.setSession(authResult);
-              resolve(); 
-          })
-      })
+  silentAuth() {
+    return new Promise((resolve, reject) => {
+      this.auth0.checkSession({}, (err, authResult) => {
+        if (err) return reject(err);
+        this.setSession(authResult);
+        resolve();
+      });
+    });
   }
 }
 

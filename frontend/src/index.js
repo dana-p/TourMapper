@@ -4,11 +4,30 @@ import { BrowserRouter } from "react-router-dom";
 import "./index.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
+import auth from "./Auth";
+
+import ApolloClient from "apollo-boost";
+import { ApolloProvider } from "react-apollo";
+
+const client = new ApolloClient({
+  uri: "http://localhost:4000/graphql",
+  request: operation => {
+    operation.setContext(context => ({
+      headers: {
+        ...context.headers,
+        authorization: auth.getIdToken()
+      }
+    }));
+  }
+});
 
 ReactDOM.render(
   <BrowserRouter>
-    <App />
+    <ApolloProvider client={client}>
+      <App />
+    </ApolloProvider>
   </BrowserRouter>,
+
   document.getElementById("root")
 );
 
