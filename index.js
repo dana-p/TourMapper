@@ -135,7 +135,9 @@ if (process.env.NODE_ENV !== "dev") {
 server.applyMiddleware({ app });
 
 monDb.once("open", function callback() {
-  app.listen({ port: ${port} }, () =>
-    console.log(`🚀 Server ready at http://localhost:${port}${server.graphqlPath}`)
+  app.listen({ port: port }, () =>
+    console.log(
+      `🚀 Server ready at http://localhost:${port}${server.graphqlPath}`
+    )
   );
 });
