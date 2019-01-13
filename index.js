@@ -18,6 +18,8 @@ const typeDefs = require("./server/Models/Typedefs");
 const resolvers = require("./server/Resolvers");
 const config = require("./server/config");
 
+var port = process.env.PORT || 4000;
+
 /*
  |--------------------------------------
  | Authetication 
@@ -133,7 +135,7 @@ if (process.env.NODE_ENV !== "dev") {
 server.applyMiddleware({ app });
 
 monDb.once("open", function callback() {
-  app.listen({ port: 4000 }, () =>
-    console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`)
+  app.listen({ port: ${port} }, () =>
+    console.log(`🚀 Server ready at http://localhost:${port}${server.graphqlPath}`)
   );
 });
