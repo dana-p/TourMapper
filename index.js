@@ -14,14 +14,13 @@ const methodOverride = require("method-override");
 const path = require("path");
 const { ApolloServer } = require("apollo-server-express");
 
-const typeDefs = require("./server/Models/Typedefs");
-const resolvers = require("./server/Resolvers");
+const typeDefs = require("./server/Graphql/typedefs");
+const resolvers = require("./server/Graphql/resolvers");
 const config = require("./server/config");
 
 var port = process.env.PORT || 4000;
 
-/*
- |--------------------------------------
+/*----------------------
  | Authetication 
  |--------------------------------------
  */

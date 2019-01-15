@@ -1,4 +1,4 @@
-const Question = require("../Models/Question");
+const Question = require("../../Models/Question");
 const { AuthenticationError } = require("apollo-server");
 
 // Resolvers define the technique for fetching the types in the schema
