@@ -2,6 +2,7 @@ type Tour {
     id: ID!
     title: String!
     description: String!
+    author: String!
     comments: [Comment]
   }
 

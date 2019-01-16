@@ -13,10 +13,12 @@ const tourResolvers = {
   },
 
   Mutation: {
-    createTour: async (_, { title, description }) => {
+    createTour: async (_, { title, description }, { user }) => {
+      const userInfo = await user;
       const newTour = new Tour({
         title,
         description,
+        author: userInfo.name,
         comments: []
       });
       await newTour.save(function(err) {
