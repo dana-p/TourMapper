@@ -3,33 +3,33 @@ import { withRouter } from "react-router-dom";
 import gql from "graphql-tag";
 import { Mutation } from "react-apollo";
 
-const CreateQuestionMutation = gql`
-  mutation CreateQuestion($title: String!, $description: String!) {
-    createQuestion(title: $title, description: $description) {
+const CreateTourMutation = gql`
+  mutation CreateTour($title: String!, $description: String!) {
+    createTour(title: $title, description: $description) {
       id
       title
       description
-      answers {
-        answer
+      comments {
+        comment
       }
     }
   }
 `;
 
-const QuestionsQuery = gql`
+const ToursQuery = gql`
   {
-    questions {
+    tours {
       id
       title
       description
-      answers {
-        answer
+      comments {
+        comment
       }
     }
   }
 `;
 
-class NewQuestion extends Component {
+class NewTour extends Component {
   constructor(props) {
     super(props);
 
@@ -55,21 +55,21 @@ class NewQuestion extends Component {
   render() {
     return (
       <Mutation
-        mutation={CreateQuestionMutation}
-        update={(cache, { data: { createQuestion } }) => {
-          const questions = cache.readQuery({
-            query: QuestionsQuery
+        mutation={CreateTourMutation}
+        update={(cache, { data: { createTour } }) => {
+          const tours = cache.readQuery({
+            query: ToursQuery
           });
           cache.writeQuery({
-            query: QuestionsQuery,
+            query: ToursQuery,
             data: {
-              questions: questions.questions.push(createQuestion)
+              tours: tours.tours.push(createTour)
             }
           });
           this.props.history.push("/");
         }}
       >
-        {createQuestion => (
+        {createTour => (
           <div className="container">
             <div className="row">
               <div className="col-12">
@@ -84,7 +84,7 @@ class NewQuestion extends Component {
                           this.updateTitle(e.target.value);
                         }} // TODO CHECK Can I not have brackes around func
                         className="form-control"
-                        placeholder="Give your question a title"
+                        placeholder="Give your tour a title"
                       />
                     </div>
                     <div className="form-group">
@@ -96,14 +96,14 @@ class NewQuestion extends Component {
                           this.updateDescription(e.target.value);
                         }}
                         className="form-control"
-                        placeholder="Give more context to your question."
+                        placeholder="Give more context to your tour."
                       />
                     </div>
                     <button
                       disabled={this.state.disabled}
                       className="btn btn-primary"
                       onClick={() => {
-                        createQuestion({
+                        createTour({
                           variables: {
                             title: this.state.title,
                             description: this.state.description
@@ -124,4 +124,4 @@ class NewQuestion extends Component {
   }
 }
 
-export default withRouter(NewQuestion);
+export default withRouter(NewTour);

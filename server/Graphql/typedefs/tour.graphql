@@ -1,0 +1,15 @@
+type Tour {
+    id: ID!
+    title: String!
+    description: String!
+    comments: [Comment]
+  }
+
+  type Query {
+    tours: [Tour]
+    tour(id: ID!): Tour
+  }
+  type Mutation {
+    createTour(title: String!, description: String!): Tour
+    addCommentToTour(id: ID!, comment: String!): Tour
+  }

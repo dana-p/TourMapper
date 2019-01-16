@@ -1,4 +1,0 @@
-  type Answer {
-    answer: String
-    author: String
-  }

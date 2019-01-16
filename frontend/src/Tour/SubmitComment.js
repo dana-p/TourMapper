@@ -4,31 +4,31 @@ import auth0Client from "../Auth";
 import gql from "graphql-tag";
 import { Mutation } from "react-apollo";
 
-const SubmitAnswerMutation = gql`
-  mutation AddAnswer($id: ID!, $answer: String!) {
-    addAnswerToQuestion(id: $id, answer: $answer) {
+const SubmitCommentMutation = gql`
+  mutation AddComment($id: ID!, $comment: String!) {
+    addCommentToTour(id: $id, comment: $comment) {
       id
       title
       description
-      answers {
-        answer
+      comments {
+        comment
         author
       }
     }
   }
 `;
 
-class SubmitAnswer extends Component {
+class SubmitComment extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      answer: ""
+      comment: ""
     };
   }
 
-  updateAnswer(value) {
+  updateComment(value) {
     this.setState({
-      answer: value
+      comment: value
     });
   }
 
@@ -36,43 +36,43 @@ class SubmitAnswer extends Component {
     if (!auth0Client.isAuthenticated()) return null;
     return (
       <Mutation
-        mutation={SubmitAnswerMutation}
-        key={this.props.questionId}
-        update={(cache, { data: { addAnswerToQuestion } }) => {
+        mutation={SubmitCommentMutation}
+        key={this.props.tourId}
+        update={(cache, { data: { addCommentToTour } }) => {
           cache.writeQuery({
-            query: this.props.questionQuery,
+            query: this.props.tourQuery,
             data: {
-              question: addAnswerToQuestion
+              tour: addCommentToTour
             }
           });
         }}
       >
-        {addAnswerToQuestion => (
+        {addCommentToTour => (
           <Fragment>
             <div className="form-group text-center">
-              <label htmlFor="answer">Answer:</label>
+              <label htmlFor="comment">Comment:</label>
               <input
                 type="text"
-                id="answer"
+                id="comment"
                 onChange={e => {
-                  this.updateAnswer(e.target.value);
+                  this.updateComment(e.target.value);
                 }}
                 className="form-control"
-                placeholder="Share your answer."
-                value={this.state.answer}
+                placeholder="Share your comment."
+                value={this.state.comment}
               />
             </div>
             <button
               className="btn btn-primary"
               onClick={() => {
-                addAnswerToQuestion({
+                addCommentToTour({
                   variables: {
-                    id: this.props.questionId,
-                    answer: this.state.answer
+                    id: this.props.tourId,
+                    comment: this.state.comment
                   }
                 });
                 this.setState({
-                  answer: ""
+                  comment: ""
                 });
               }}
             >
@@ -86,4 +86,4 @@ class SubmitAnswer extends Component {
   }
 }
 
-export default withRouter(SubmitAnswer);
+export default withRouter(SubmitComment);

@@ -41,7 +41,7 @@ app.use(morgan("combined")); // Log HTTP requests
 app.use(methodOverride("X-HTTP-Method-Override"));
 
 const client = jwksRsa({
-  jwksUri: `${config.AUTH0_ISSUER}/.well-known/jwks.json`
+  jwksUri: `${config.AUTH0_ISSUER}.well-known/jwks.json`
 });
 
 function getKey(header, cb) {
@@ -61,7 +61,7 @@ const server = new ApolloServer({
   context: ({ req }) => {
     // simple auth check on every request
     const token = req.headers.authorization;
-    if (token === "undefined" || token === null) return {}; // DANATODO PROBABLY DON'T NEED THIS ANYMORE
+    //  if (token === "undefined" || token === null) return {}; // DANATODO PROBABLY DON'T NEED THIS ANYMORE
 
     const user = new Promise((resolve, reject) => {
       jwt.verify(token, getKey, options, (err, decoded) => {
