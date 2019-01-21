@@ -27,17 +27,6 @@ class AttractionPopup extends Component {
     });
   };
 
-  updateAttractionLatitude = e => {
-    this.setState({
-      coordinateLat: e
-    });
-  };
-  updateAttractionLongitude = e => {
-    this.setState({
-      coordinateLong: e
-    });
-  };
-
   addPoint = () => {
     this.props.addPoint(this.state);
   };
@@ -84,6 +73,7 @@ class AttractionPopup extends Component {
                     </div>
                     <Map
                       markerPosition={markerPosition}
+                      lastMarkerPosition={this.props.lastMarkerPosition}
                       mapClickEvent={this.onMapClick}
                     />
                     <div className="form-group">

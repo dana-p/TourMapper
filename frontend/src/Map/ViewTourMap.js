@@ -2,12 +2,17 @@ import React from "react";
 import L from "leaflet";
 import "./Map.css";
 
+// DANATODO: Is there any way to move this out?
+const mapStyle = {
+  height: "500px"
+};
+
 class ViewTourMap extends React.Component {
   componentDidMount() {
     // create map
     this.map = L.map("map", {
       center: this.props.markers[0].markerPosition,
-      zoom: 17,
+      zoom: 16,
       layers: [
         L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {
           attribution:
@@ -16,13 +21,11 @@ class ViewTourMap extends React.Component {
       ]
     });
 
-    this.map.setView(this.props.markers[0].markerPosition, 17);
+    this.map.setView(this.props.markers[0].markerPosition, 16);
 
-    this.map.locate({ setView: true });
-    let here = this;
-
+    let self = this;
     this.props.markers.forEach(function(markerInfo) {
-      var marker = L.marker(markerInfo.markerPosition).addTo(here.map);
+      var marker = L.marker(markerInfo.markerPosition).addTo(self.map);
       marker.bindPopup(
         "<b>" + markerInfo.title + "</b><br></br>" + markerInfo.description
       );
@@ -30,7 +33,7 @@ class ViewTourMap extends React.Component {
   }
 
   render() {
-    return <div id="map" className="leaflet-container" />;
+    return <div id="map" style={mapStyle} />;
   }
 }
 

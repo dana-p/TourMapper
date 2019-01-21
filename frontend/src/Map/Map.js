@@ -2,6 +2,10 @@ import React from "react";
 import L from "leaflet";
 import "./Map.css";
 
+const mapStyle = {
+  height: "300px"
+};
+
 class Map extends React.Component {
   componentDidMount() {
     // create map
@@ -16,7 +20,16 @@ class Map extends React.Component {
       ]
     });
 
-    this.map.locate({ setView: true });
+    if (
+      !this.props.lastMarkerPosition ||
+      this.props.lastMarkerPosition === ""
+    ) {
+      this.map.locate({ setView: true });
+    }
+    // Center the map nearby the last set marker and zoom in
+    else {
+      this.map.setView(this.props.lastMarkerPosition, 16);
+    }
 
     this.map.on("click", this.props.mapClickEvent);
     this.marker = L.marker(this.props.markerPosition).addTo(this.map);
@@ -30,7 +43,7 @@ class Map extends React.Component {
   }
 
   render() {
-    return <div id="map" className="map" />;
+    return <div id="map" style={mapStyle} />;
   }
 }
 

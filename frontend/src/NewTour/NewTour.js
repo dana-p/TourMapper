@@ -53,7 +53,8 @@ class NewTour extends Component {
       title: "",
       description: "",
       showpopup: false,
-      attractions: []
+      attractions: [],
+      lastMarkerPosition: ""
     };
   }
 
@@ -84,7 +85,8 @@ class NewTour extends Component {
       markerPosition: pointInfo.markerPosition
     });
     this.setState({
-      attractions: attractions
+      attractions: attractions,
+      lastMarkerPosition: pointInfo.markerPosition
     });
     this.togglePopup();
     console.log(this.state);
@@ -157,6 +159,7 @@ class NewTour extends Component {
                           text="Close Me"
                           closePopup={this.togglePopup.bind(this)}
                           addPoint={this.addPointToTour}
+                          lastMarkerPosition={this.state.lastMarkerPosition}
                         />
                       ) : null}
                     </div>
