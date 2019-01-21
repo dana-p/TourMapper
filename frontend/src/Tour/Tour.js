@@ -4,12 +4,22 @@ import SubmitComment from "./SubmitComment";
 import gql from "graphql-tag";
 import { Query } from "react-apollo";
 
+import ViewTourMap from "../Map/ViewTourMap";
+
 const TourQuery = gql`
   query GetTour($id: ID!) {
     tour(id: $id) {
       id
       title
       description
+      attractions {
+        title
+        description
+        markerPosition {
+          lat
+          lng
+        }
+      }
       comments {
         comment
         author
@@ -52,6 +62,7 @@ class Tour extends Component {
             <div>
               <h1 className="display-3">{data.tour.title}</h1>
               <p className="lead">{data.tour.description}</p>
+              <ViewTourMap markers={data.tour.attractions} />
               <hr className="my-4" />
               <SubmitComment tourId={data.tour.id} tourQuery={this.TourQuery} />
 
