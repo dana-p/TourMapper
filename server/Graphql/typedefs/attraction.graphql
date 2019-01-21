@@ -1,0 +1,18 @@
+
+type Position{
+  lat: Float
+  lng: Float 
+}  
+
+  type Attraction {
+    title: String
+    description: String
+    markerPosition: Position
+  }
+
+  input AttractionDraft {
+    title: String
+    description: String
+    coordinateLat: Float
+    coordinateLong: Float
+  }

@@ -1,16 +1,22 @@
-type Tour {
+  type Tour {
     id: ID!
     title: String!
     description: String!
     author: String!
     comments: [Comment]
+    attractions: [Attraction]
   }
 
   type Query {
     tours: [Tour]
     tour(id: ID!): Tour
   }
+
   type Mutation {
-    createTour(title: String!, description: String!): Tour
+    createTour(
+      title: String!
+      description: String!
+      attractions: String!
+    ): Tour
     addCommentToTour(id: ID!, comment: String!): Tour
   }

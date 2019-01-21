@@ -13,14 +13,16 @@ const tourResolvers = {
   },
 
   Mutation: {
-    createTour: async (_, { title, description }, { user }) => {
+    createTour: async (_, { title, description, attractions }, { user }) => {
       const userInfo = await user;
       const newTour = new Tour({
         title,
         description,
         author: userInfo.name,
-        comments: []
+        comments: [],
+        attractions: JSON.parse(attractions)
       });
+
       await newTour.save(function(err) {
         if (err) {
           //return res.status(500).send({ message: err.message }); // TODO Will this return? Since resolvers are not middleware, I don't thinkso

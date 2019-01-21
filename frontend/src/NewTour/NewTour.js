@@ -2,19 +2,34 @@ import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import gql from "graphql-tag";
 import { Mutation } from "react-apollo";
+import AddIcon from "@material-ui/icons/AddCircleOutline";
+
+import AttractionPopup from "../Popup/Popup";
 
 const CreateTourMutation = gql`
-  mutation CreateTour($title: String!, $description: String!) {
-    createTour(title: $title, description: $description) {
+  mutation CreateTour(
+    $title: String!
+    $description: String!
+    $attractions: String!
+  ) {
+    createTour(
+      title: $title
+      description: $description
+      attractions: $attractions
+    ) {
       id
       title
       description
+      attractions {
+        title
+      }
       comments {
         comment
+        author
       }
     }
   }
-`;
+`; // DANATODO: Do I need to return comments?
 
 const ToursQuery = gql`
   {
@@ -36,7 +51,9 @@ class NewTour extends Component {
     this.state = {
       disabled: false,
       title: "",
-      description: ""
+      description: "",
+      showpopup: false,
+      attractions: []
     };
   }
 
@@ -51,6 +68,38 @@ class NewTour extends Component {
       title: value
     });
   }
+
+  togglePopup() {
+    this.setState({
+      showPopup: !this.state.showPopup
+    });
+  }
+
+  addPointToTour = pointInfo => {
+    console.log(pointInfo);
+    var { attractions } = this.state;
+    attractions.push({
+      title: pointInfo.title,
+      description: pointInfo.description,
+      markerPosition: pointInfo.markerPosition
+    });
+    this.setState({
+      attractions: attractions
+    });
+    this.togglePopup();
+    console.log(this.state);
+  };
+
+  listPointsOfAttraction = () => {
+    let list = [];
+    for (let i = 0; i < this.state.attractions.length; i++) {
+      //Create the parent and add the children
+      list.push(
+        <li key={"attraction-" + i}>{this.state.attractions[i].title}</li>
+      );
+    }
+    return list;
+  };
 
   render() {
     return (
@@ -96,17 +145,31 @@ class NewTour extends Component {
                           this.updateDescription(e.target.value);
                         }}
                         className="form-control"
-                        placeholder="Give more context to your tour."
+                        placeholder="Give a quick introduction to your tour"
                       />
+                    </div>
+                    <div className="form-group">
+                      <label>Points of Attraction:</label>
+                      <ol>{this.listPointsOfAttraction()}</ol>
+                      <AddIcon onClick={this.togglePopup.bind(this)} />
+                      {this.state.showPopup ? (
+                        <AttractionPopup
+                          text="Close Me"
+                          closePopup={this.togglePopup.bind(this)}
+                          addPoint={this.addPointToTour}
+                        />
+                      ) : null}
                     </div>
                     <button
                       disabled={this.state.disabled}
                       className="btn btn-primary"
                       onClick={() => {
+                        var attr = JSON.stringify(this.state.attractions);
                         createTour({
                           variables: {
                             title: this.state.title,
-                            description: this.state.description
+                            description: this.state.description,
+                            attractions: attr
                           }
                         });
                       }}
