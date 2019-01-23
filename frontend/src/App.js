@@ -9,6 +9,8 @@ import SecuredRoute from "./SecuredRoute/SecuredRoute";
 import NewTour from "./NewTour/NewTour";
 import auth0Client from "./Auth";
 
+import ButtonAppBar from "./AppBar/AppBar";
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -42,7 +44,7 @@ class App extends Component {
   render() {
     return (
       <div>
-        <NavBar />
+        <ButtonAppBar />
         <Route exact path="/" component={Tours} />
         <Route exact path="/tour/:tourId" component={Tour} />
         <Route exact path="/callback" component={Callback} />
