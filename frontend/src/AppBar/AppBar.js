@@ -1,4 +1,5 @@
 import React, { Fragment } from "react";
+import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -93,6 +94,9 @@ const styles = theme => ({
     [theme.breakpoints.up("md")]: {
       display: "none"
     }
+  },
+  nocolor: {
+    color: "unset"
   }
 });
 
@@ -214,7 +218,9 @@ class PrimarySearchAppBar extends React.Component {
               color="inherit"
               noWrap
             >
-              Tour-Mapper
+              <Link to="/" className={classes.nocolor}>
+                Tour-Mapper
+              </Link>
             </Typography>
             <div className={classes.search}>
               <div className={classes.searchIcon}>
