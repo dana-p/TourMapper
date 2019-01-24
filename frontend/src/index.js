@@ -9,7 +9,7 @@ import auth from "./Auth";
 import ApolloClient from "apollo-boost";
 import { ApolloProvider } from "react-apollo";
 
-const client = new ApolloClient({
+export const client = new ApolloClient({
   uri: "/graphql",
   request: operation => {
     operation.setContext(context => ({

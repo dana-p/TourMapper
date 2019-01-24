@@ -6,6 +6,7 @@ const tourSchema = new Schema({
   description: { type: String, required: true },
   comments: { type: Array, required: false },
   author: { type: String, required: true },
+  authorId: { type: String, required: true },
   attractions: { type: Array, required: false }
 });
 

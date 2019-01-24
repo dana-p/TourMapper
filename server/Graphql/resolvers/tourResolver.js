@@ -1,4 +1,5 @@
 const Tour = require("../../Models/Tour");
+const User = require("../../Models/User");
 const { AuthenticationError } = require("apollo-server");
 
 // Resolvers define the technique for fetching the types in the schema
@@ -15,15 +16,31 @@ const tourResolvers = {
   Mutation: {
     createTour: async (_, { title, description, attractions }, { user }) => {
       const userInfo = await user;
+      var userInDb = await User.findOne(
+        { userIdentifier: userInfo.sub },
+        function(err) {
+          if (err) return handleError(err);
+        }
+      );
+
       const newTour = new Tour({
         title,
         description,
         author: userInfo.name,
+        authorId: userInDb.id,
         comments: [],
         attractions: JSON.parse(attractions)
       });
 
       await newTour.save(function(err) {
+        if (err) {
+          //return res.status(500).send({ message: err.message }); // TODO Will this return? Since resolvers are not middleware, I don't thinkso
+          throw new Error("There was an error saving new tour to database");
+        }
+      });
+
+      userInDb.tours.push(newTour.id);
+      userInDb.save(function(err) {
         if (err) {
           //return res.status(500).send({ message: err.message }); // TODO Will this return? Since resolvers are not middleware, I don't thinkso
           throw new Error("There was an error saving new tour to database");

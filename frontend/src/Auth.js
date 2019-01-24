@@ -1,4 +1,5 @@
 import auth0 from "auth0-js";
+import userData from "./UserService";
 
 class Auth {
   constructor() {
@@ -8,7 +9,7 @@ class Auth {
       clientID: "LrUWUhZTWmwi0ire5GDCN3F4RUaxJJ62",
       redirectUri: this.getUri() + "/callback",
       responseType: "id_token",
-      scope: "openid profile",
+      scope: "openid email profile",
       issuer: "https://tour-mapper.auth0.com"
     });
 
@@ -51,7 +52,7 @@ class Auth {
           return reject(err);
         }
         this.setSession(authResult);
-
+        userData.setUserData();
         resolve();
       });
     });
