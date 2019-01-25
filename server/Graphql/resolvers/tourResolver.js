@@ -10,6 +10,10 @@ const tourResolvers = {
     },
     tour: (_, { id }) => {
       return Tour.findById(id);
+    },
+    toursByUser: async (_, { userId }) => {
+      var creator = await User.findById(userId);
+      return Tour.find({ _id: { $in: creator.tours } });
     }
   },
 

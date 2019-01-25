@@ -3,7 +3,7 @@ type User{
     name: String! 
     userIdentifier: String!
     email: String!
-    tours: [Tour]
+    tours: [String]
     firstName: String
     lastName: String
     picture: String

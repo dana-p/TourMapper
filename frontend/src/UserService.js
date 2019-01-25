@@ -14,7 +14,7 @@ const GetUser = gql`
       picture
     }
   }
-`;
+`; // DANATODO: Do I need more information for the tours? Do I even need the tours???
 
 class UserData {
   userData = null;

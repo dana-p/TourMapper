@@ -3,6 +3,7 @@ import { Route, withRouter } from "react-router-dom";
 import "./App.css";
 import NavBar from "./NavBar/NavBar";
 import Tours from "./Tours/Tours";
+import MyTours from "./MyTours/MyTours";
 import Tour from "./Tour/Tour";
 import Callback from "./Callback";
 import SecuredRoute from "./SecuredRoute/SecuredRoute";
@@ -52,6 +53,11 @@ class App extends Component {
           path="/new-tour"
           checkingSession={this.state.checkingSession}
           component={NewTour}
+        />
+        <SecuredRoute
+          path="/my-tours"
+          checkingSession={this.state.checkingSession}
+          component={MyTours}
         />
       </div>
     );

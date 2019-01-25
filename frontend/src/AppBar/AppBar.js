@@ -97,6 +97,10 @@ const styles = theme => ({
   },
   nocolor: {
     color: "unset"
+  },
+  unsetLinkStyle: {
+    color: "unset",
+    textDecoration: "none"
   }
 });
 
@@ -161,7 +165,14 @@ class PrimarySearchAppBar extends React.Component {
         )}
         {auth0Client.isAuthenticated() && (
           <div>
-            <MenuItem onClick={this.handleMenuClose}>My tours</MenuItem>
+            <MenuItem onClick={this.handleMenuClose}>
+              <Link
+                to="/my-tours"
+                style={{ textDecoration: "none", color: "unset" }}
+              >
+                My tours
+              </Link>
+            </MenuItem>
             <MenuItem onClick={this.signOut}>Sign Out</MenuItem>
           </div>
         )}

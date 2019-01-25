@@ -10,6 +10,7 @@
   type Query {
     tours: [Tour]
     tour(id: ID!): Tour
+    toursByUser(userId: String!): [Tour]
   }
 
   type Mutation {
