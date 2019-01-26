@@ -79,6 +79,33 @@ const tourResolvers = {
           "You must be logged in to post a new comment"
         );
       }
+    },
+    deleteTour: async (_, { id }, { user }) => {
+      const userInfo = await user;
+      var userInDb = await User.findOne(
+        { userIdentifier: userInfo.sub },
+        function(err) {
+          if (err) return handleError(err);
+        }
+      );
+      // Ensure that tours to be deleted belogs to the user:
+      var index = userInDb.tours.indexOf(id);
+      if (index >= 0) {
+        var tour = await Tour.findByIdAndDelete(id);
+
+        // Remove from user's array
+        userInDb.tours.splice(index, 1);
+        userInDb.save(function(err) {
+          if (err) {
+            //return res.status(500).send({ message: err.message }); // TODO Will this return? Since resolvers are not middleware, I don't thinkso
+            throw new Error("There was an error saving new tour to database");
+          }
+        });
+
+        return tour;
+      } else {
+        throw new Error("You can't delete someone else's tours!");
+      }
     }
   }
 };

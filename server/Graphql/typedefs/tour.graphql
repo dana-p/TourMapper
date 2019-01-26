@@ -20,4 +20,5 @@
       attractions: String!
     ): Tour
     addCommentToTour(id: ID!, comment: String!): Tour
+    deleteTour(id: ID!): Tour
   }
