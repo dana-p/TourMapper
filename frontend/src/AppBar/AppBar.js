@@ -216,13 +216,13 @@ class PrimarySearchAppBar extends React.Component {
       <div className={classes.root}>
         <AppBar>
           <Toolbar>
-            <IconButton
+            {/* <IconButton
               className={classes.menuButton}
               color="inherit"
               aria-label="Open drawer"
             >
               <MenuIcon />
-            </IconButton>
+            </IconButton> */}
             <Typography
               className={classes.title}
               variant="h6"
@@ -233,7 +233,7 @@ class PrimarySearchAppBar extends React.Component {
                 Tour-Mapper
               </Link>
             </Typography>
-            <div className={classes.search}>
+            {/* <div className={classes.search}>
               <div className={classes.searchIcon}>
                 <SearchIcon />
               </div>
@@ -244,7 +244,7 @@ class PrimarySearchAppBar extends React.Component {
                   input: classes.inputInput
                 }}
               />
-            </div>
+            </div> */}
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
               {/* <IconButton color="inherit">

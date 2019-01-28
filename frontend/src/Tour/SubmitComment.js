@@ -10,7 +10,14 @@ const SubmitCommentMutation = gql`
       id
       title
       description
-      attractions
+      attractions {
+        title
+        description
+        markerPosition {
+          lat
+          lng
+        }
+      }
       comments {
         comment
         author
