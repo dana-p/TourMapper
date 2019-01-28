@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
+import Button from "@material-ui/core/Button";
 
 import Map from "../Map/Map";
 import "./Popup.css";
@@ -43,7 +44,7 @@ class AttractionPopup extends Component {
     return (
       <div className="popup">
         <div className="popup_inner">
-          <div className="container">
+          <div className="popup_container">
             <div className="row">
               <div className="col-12">
                 <div className="card border-primary">
@@ -89,8 +90,16 @@ class AttractionPopup extends Component {
             </div>
           </div>
 
-          <button onClick={this.props.closePopup}>Cancel</button>
-          <button onClick={this.addPoint}>Add Point</button>
+          <Button
+            variant="outlined"
+            color="secondary"
+            onClick={this.props.closePopup}
+          >
+            Cancel
+          </Button>
+          <Button variant="outlined" color="primary" onClick={this.addPoint}>
+            Add Point
+          </Button>
         </div>
       </div>
     );
