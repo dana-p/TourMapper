@@ -18,7 +18,11 @@ const tourResolvers = {
   },
 
   Mutation: {
-    createTour: async (_, { title, description, attractions }, { user }) => {
+    createTour: async (
+      _,
+      { title, description, location, attractions },
+      { user }
+    ) => {
       const userInfo = await user;
       var userInDb = await User.findOne(
         { userIdentifier: userInfo.sub },
@@ -30,6 +34,7 @@ const tourResolvers = {
       const newTour = new Tour({
         title,
         description,
+        location,
         author: userInfo.name,
         authorId: userInDb.id,
         comments: [],

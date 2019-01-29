@@ -10,16 +10,19 @@ const CreateTourMutation = gql`
   mutation CreateTour(
     $title: String!
     $description: String!
+    $location: String!
     $attractions: String!
   ) {
     createTour(
       title: $title
       description: $description
+      location: $location
       attractions: $attractions
     ) {
       id
       title
       description
+      location
       attractions {
         title
       }
@@ -37,6 +40,7 @@ const ToursQuery = gql`
       id
       title
       description
+      location
       comments {
         comment
       }
@@ -52,6 +56,7 @@ class NewTour extends Component {
       disabled: false,
       title: "",
       description: "",
+      location: "",
       showpopup: false,
       attractions: [],
       lastMarkerPosition: ""
@@ -67,6 +72,12 @@ class NewTour extends Component {
   updateTitle(value) {
     this.setState({
       title: value
+    });
+  }
+
+  updateLocation(value) {
+    this.setState({
+      location: value
     });
   }
 
@@ -133,7 +144,7 @@ class NewTour extends Component {
                         type="text"
                         onBlur={e => {
                           this.updateTitle(e.target.value);
-                        }} // TODO CHECK Can I not have brackes around func
+                        }} // TODO CHECK Can I not have brackets around func
                         className="form-control"
                         placeholder="Give your tour a title"
                       />
@@ -148,6 +159,17 @@ class NewTour extends Component {
                         }}
                         className="form-control"
                         placeholder="Give a quick introduction to your tour"
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label htmlFor="exampleInputEmail1">Location:</label>
+                      <input
+                        disabled={this.state.disabled}
+                        type="text"
+                        onBlur={e => {
+                          this.updateLocation(e.target.value);
+                        }} // TODO Do I need this exampleInputEmail1 everywhere?
+                        className="form-control"
                       />
                     </div>
                     <div className="form-group">
@@ -172,6 +194,7 @@ class NewTour extends Component {
                           variables: {
                             title: this.state.title,
                             description: this.state.description,
+                            location: this.state.location,
                             attractions: attr
                           }
                         });

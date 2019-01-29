@@ -4,12 +4,15 @@ import { Link } from "react-router-dom";
 import gql from "graphql-tag";
 import { Query } from "react-apollo";
 
+import ListOfTours from "./ListOfTours";
+
 const ToursQuery = gql`
   {
     tours {
       id
       title
       description
+      location
       comments {
         comment
       }
@@ -18,13 +21,6 @@ const ToursQuery = gql`
 `;
 
 class Tours extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      tours: null
-    };
-  }
-
   render() {
     const ToursData = () => (
       <Query query={ToursQuery}>
@@ -32,21 +28,7 @@ class Tours extends Component {
           if (loading) return "Loading tours...";
           if (error) return `Error! ${error.message}`;
 
-          return data.tours.map(tour => (
-            <div key={tour.id} className="col-sm-12 col-md-4 col-lg-3">
-              <Link to={`/tour/${tour.id}`}>
-                <div className="card text-white bg-success mb-3">
-                  <div className="card-header">
-                    Comments: {tour.comments.length}
-                  </div>
-                  <div className="card-body">
-                    <h4 className="card-title">{tour.title}</h4>
-                    <p className="card-text">{tour.description}</p>
-                  </div>
-                </div>
-              </Link>
-            </div>
-          ));
+          return <ListOfTours tours={data.tours} />;
         }}
       </Query>
     );
@@ -54,6 +36,7 @@ class Tours extends Component {
     return (
       <div className="container">
         <div className="row">
+          <ToursData />
           <Link to="/new-tour">
             <div className="card text-white bg-secondary mb-3">
               <div className="card-header">Want to add a tour? Start here!</div>
@@ -63,7 +46,6 @@ class Tours extends Component {
               </div>
             </div>
           </Link>
-          <ToursData />
         </div>
       </div>
     );

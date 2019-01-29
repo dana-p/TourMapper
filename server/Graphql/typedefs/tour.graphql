@@ -2,6 +2,7 @@
     id: ID!
     title: String!
     description: String!
+    location: String!
     author: String!
     comments: [Comment]
     attractions: [Attraction]
@@ -17,6 +18,7 @@
     createTour(
       title: String!
       description: String!
+      location: String!
       attractions: String!
     ): Tour
     addCommentToTour(id: ID!, comment: String!): Tour
