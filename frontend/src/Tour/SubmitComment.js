@@ -58,10 +58,10 @@ class SubmitComment extends Component {
         {addCommentToTour => (
           <Fragment>
             <div className="form-group text-center">
-              <label htmlFor="comment">Comment:</label>
+              <label htmlFor="commentInput">Comment:</label>
               <input
                 type="text"
-                id="comment"
+                id="commentInput"
                 onChange={e => {
                   this.updateComment(e.target.value);
                 }}
