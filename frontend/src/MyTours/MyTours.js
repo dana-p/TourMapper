@@ -33,6 +33,20 @@ const DeleteTour = gql`
   }
 `;
 
+const AllToursQuery = gql`
+  {
+    tours {
+      id
+      title
+      description
+      location
+      comments {
+        comment
+      }
+    }
+  }
+`;
+
 class MyTours extends Component {
   constructor(props) {
     super(props);
@@ -95,6 +109,23 @@ class MyTours extends Component {
                         toursByUser: updatedToursCache
                       }
                     });
+
+                    try {
+                      const alltours = cache.readQuery({
+                        query: AllToursQuery
+                      });
+
+                      cache.writeQuery({
+                        query: AllToursQuery,
+                        data: {
+                          tours: alltours.tours.filter(
+                            tour => tour.id !== deleteTour.id
+                          )
+                        }
+                      });
+                    } catch (error) {
+                      console.log(error);
+                    }
                   }}
                 >
                   {deleteTour => (
