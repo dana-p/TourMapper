@@ -49,3 +49,11 @@
   height: 200px;
   width: 100%;
 }
+
+.popup_label {
+  margin-bottom: 0;
+}
+
+.popup_button {
+  margin: 0.3rem;
+}

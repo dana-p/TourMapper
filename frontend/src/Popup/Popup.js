@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
-import Button from "@material-ui/core/Button";
+import FormErrors from "../NewTour/FormErrors";
 
 import Map from "../Map/Map";
 import "./Popup.css";
@@ -12,30 +12,84 @@ class AttractionPopup extends Component {
     this.state = {
       title: "",
       description: "",
-      markerPosition: { lat: 0, lng: 0 }
+      markerPosition: { lat: 0, lng: 0 },
+      formErrors: { title: "", description: "", markerPosition: "" },
+      formValidity: {
+        title: false,
+        description: false,
+        markerPosition: false
+      }
     };
   }
 
-  updateAttractionTitle = e => {
-    this.setState({
-      title: e
+  handleUserInput(e) {
+    const name = e.target.id;
+    const value = e.target.value;
+    this.setState({ [name]: value }, () => {
+      this.validateField(name, value);
     });
-  };
+  }
 
-  updateAttractionDescription = e => {
+  validateField(fieldName, value) {
+    let fieldValidationErrors = this.state.formErrors;
+    let formValidity = this.state.formValidity;
+
+    switch (fieldName) {
+      case "title":
+        formValidity.title = value.length >= 1;
+        fieldValidationErrors.title = formValidity.title
+          ? ""
+          : " Title is too short.";
+        break;
+      case "description":
+        formValidity.description = value.length >= 10;
+        fieldValidationErrors.description = formValidity.description
+          ? ""
+          : " Description is too short.";
+        break;
+      default:
+        break;
+    }
+
+    fieldValidationErrors.markerPosition = formValidity.markerPosition
+      ? ""
+      : " Select the point on the map.";
+
+    this.setState(
+      {
+        formErrors: fieldValidationErrors,
+        formValidity: formValidity
+      },
+      this.validateForm
+    );
+  }
+
+  validateForm() {
     this.setState({
-      description: e
+      formValid:
+        this.state.formValidity.title &&
+        this.state.formValidity.description &&
+        this.state.formValidity.markerPosition
     });
-  };
+  }
 
   addPoint = () => {
     this.props.addPoint(this.state);
   };
 
   onMapClick = e => {
-    this.setState({
-      markerPosition: e.latlng
-    });
+    let formValidity = this.state.formValidity;
+    let formErrors = this.state.formErrors;
+    formValidity.markerPosition = true;
+    formErrors.markerPosition = ""; // Remove any error text
+
+    this.setState(
+      {
+        markerPosition: e.latlng,
+        formValidity: formValidity
+      },
+      this.validateForm
+    );
   };
 
   render() {
@@ -50,26 +104,30 @@ class AttractionPopup extends Component {
                 <div className="card border-primary">
                   <div className="card-body text-left">
                     <div className="form-group">
-                      <label htmlFor="attractionInput">
+                      <label className="popup_label" htmlFor="title">
                         Name of Attraction:
                       </label>
                       <input
                         type="text"
-                        onBlur={e => {
-                          this.updateAttractionTitle(e.target.value);
+                        onChange={e => {
+                          this.handleUserInput(e);
                         }}
                         className="form-control"
                         placeholder="Attraction official name"
+                        id="title"
                       />
                     </div>
                     <div className="form-group">
-                      <label htmlFor="attractionInput">Description:</label>
+                      <label className="popup_label" htmlFor="description">
+                        Description:
+                      </label>
                       <textarea
-                        onBlur={e => {
-                          this.updateAttractionDescription(e.target.value);
+                        onChange={e => {
+                          this.handleUserInput(e);
                         }}
                         className="form-control"
                         placeholder="Give the description of the attraction"
+                        id="description"
                       />
                     </div>
                     <Map
@@ -90,16 +148,22 @@ class AttractionPopup extends Component {
             </div>
           </div>
 
-          <Button
-            variant="outlined"
-            color="secondary"
+          <button
+            className="btn btn-danger popup_button"
             onClick={this.props.closePopup}
           >
             Cancel
-          </Button>
-          <Button variant="outlined" color="primary" onClick={this.addPoint}>
+          </button>
+          <button
+            disabled={!this.state.formValid}
+            className="btn btn-primary popup_button"
+            onClick={this.addPoint}
+          >
             Add Point
-          </Button>
+          </button>
+          <div className="panel panel-default">
+            <FormErrors formErrors={this.state.formErrors} />
+          </div>
         </div>
       </div>
     );
