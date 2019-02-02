@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import SubmitComment from "./SubmitComment";
-
+import { Link } from "react-router-dom";
 import gql from "graphql-tag";
 import { Query } from "react-apollo";
 
@@ -20,6 +20,8 @@ const TourQuery = gql`
           lng
         }
       }
+      author
+      authorId
       comments {
         comment
         author
@@ -57,10 +59,17 @@ class Tour extends Component {
         {({ loading, error, data }) => {
           if (loading) return "Loading...";
           if (error) return `Error! ${error.message}`;
+          if (data.tour === null) return "Error, no such tour exists!";
 
           return (
             <div>
               <h1 className="display-3">{data.tour.title}</h1>
+              <div className="subtitle1">
+                A tour by{" "}
+                <Link to={`/user/${data.tour.authorId}`}>
+                  {data.tour.author}
+                </Link>
+              </div>
               <p className="lead">{data.tour.description}</p>
               <ViewTourMap markers={data.tour.attractions} />
               <hr className="my-4" />

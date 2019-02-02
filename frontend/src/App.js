@@ -8,6 +8,7 @@ import Tour from "./Tour/Tour";
 import Callback from "./Callback";
 import SecuredRoute from "./SecuredRoute/SecuredRoute";
 import NewTour from "./NewTour/NewTour";
+import PublicProfile from "./Profile/PublicProfile";
 import auth0Client from "./Auth";
 
 import ButtonAppBar from "./AppBar/AppBar";
@@ -48,6 +49,7 @@ class App extends Component {
         <ButtonAppBar />
         <Route exact path="/" component={Tours} />
         <Route exact path="/tour/:tourId" component={Tour} />
+        <Route exact path="/user/:userId" component={PublicProfile} />
         <Route exact path="/callback" component={Callback} />
         <SecuredRoute
           path="/new-tour"

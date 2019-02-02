@@ -4,6 +4,7 @@
     description: String!
     location: String!
     author: String!
+    authorId: String! 
     comments: [Comment]
     attractions: [Attraction]
   }
