@@ -1,5 +1,7 @@
 import React from "react";
 import L from "leaflet";
+import Locate from "leaflet.locatecontrol";
+
 import "./Map.css";
 
 const mapStyle = {
@@ -10,15 +12,20 @@ class Map extends React.Component {
   componentDidMount() {
     // create map
     this.map = L.map("map", {
-      center: [49.8419, 24.0315],
+      center: [43.65, -79.38],
       zoom: 17,
       layers: [
-        L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {
-          attribution:
-            '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-        })
+        L.tileLayer(
+          "https://api.mapbox.com/styles/v1/mapbox/outdoors-v9/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoic2FpeWFuZ2lybCIsImEiOiJjaWxwbzRkM2EwOHFhdWxrbmJ6NXhrYTR4In0.Zk2dnoprK00FJZ4N_FcW9A",
+          {
+            attribution: '&copy; <a href="https://www.mapbox.com/">Mapbox</a>'
+          }
+        )
       ]
     });
+
+    const lc = new Locate();
+    lc.addTo(this.map);
 
     if (
       !this.props.lastMarkerPosition ||
