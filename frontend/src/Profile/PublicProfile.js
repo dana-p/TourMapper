@@ -13,6 +13,7 @@ import CardMedia from "@material-ui/core/CardMedia";
 import { Query } from "react-apollo";
 
 import { UserQuery, ToursByUser } from "../GraphQLCalls";
+import Loading from "../Loading";
 
 const styles = theme => ({
   layout: {
@@ -61,7 +62,7 @@ class PublicProfile extends React.Component {
     const UserInfo = ({ id }) => (
       <Query query={UserQuery} variables={{ id }}>
         {({ loading, error, data }) => {
-          if (loading) return "Loading user info...";
+          if (loading) return <Loading />;
           if (error) return `Error! ${error.message}`;
           if (data.user === null) return "Error! No such user...";
           return (
@@ -111,7 +112,7 @@ class PublicProfile extends React.Component {
       ToursData = ({ userId }) => (
         <Query query={ToursByUser} variables={{ userId }}>
           {({ loading, error, data }) => {
-            if (loading) return "Loading tours...";
+            if (loading) return <Loading />;
             if (error) return `Error! ${error.message}`;
             if (data.toursByUser.length === 0) {
               return "User hasn't made any tours yet";
@@ -139,7 +140,7 @@ class PublicProfile extends React.Component {
     const ToursData2 = ({ userId }) => (
       <Query query={ToursByUser} variables={{ userId }}>
         {({ loading, error, data }) => {
-          if (loading) return "Loading tours...";
+          if (loading) return <Loading />;
           if (error) return `Error! ${error.message}`;
           if (data.toursByUser.length === 0) {
             return "User hasn't made any tours yet";

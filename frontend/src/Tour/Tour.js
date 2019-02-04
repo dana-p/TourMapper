@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { Query } from "react-apollo";
 
 import ViewTourMap from "../Map/ViewTourMap";
+import Loading from "../Loading";
 
 import { TourQuery } from "../GraphQLCalls";
 
@@ -34,7 +35,7 @@ class Tour extends Component {
     const TourData = ({ id }) => (
       <Query query={TourQuery} variables={{ id }}>
         {({ loading, error, data }) => {
-          if (loading) return "Loading...";
+          if (loading) return <Loading />;
           if (error) return `Error! ${error.message}`;
           if (data.tour === null) return "Error, no such tour exists!";
 

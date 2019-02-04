@@ -6,12 +6,14 @@ import { AllToursQuery } from "../GraphQLCalls";
 
 import ListOfTours from "./ListOfTours";
 
+import Loading from "../Loading";
+
 class Tours extends Component {
   render() {
     const ToursData = () => (
       <Query query={AllToursQuery}>
         {({ loading, error, data }) => {
-          if (loading) return "Loading tours...";
+          if (loading) return <Loading />;
           if (error) return `Error! ${error.message}`;
 
           return <ListOfTours tours={data.tours} />;

@@ -15,6 +15,7 @@ import PaypalEmailForm from "./PaypalEmailForm";
 import { Query } from "react-apollo";
 
 import { UserQuery } from "../GraphQLCalls";
+import Loading from "../Loading";
 
 const styles = theme => ({
   layout: {
@@ -62,12 +63,12 @@ class MyProfile extends React.Component {
   render() {
     const { classes } = this.props;
 
-    let UserInfo = () => <h1>Loading your info...</h1>;
+    let UserInfo = () => <Loading />;
     if (this.state.userId != null) {
       UserInfo = ({ id }) => (
         <Query query={UserQuery} variables={{ id }}>
           {({ loading, error, data }) => {
-            if (loading) return "Loading user info...";
+            if (loading) return <Loading />;
             if (error) return `Error! ${error.message}`;
             if (data.user === null) return "Error! No such user...";
 

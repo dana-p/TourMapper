@@ -7,6 +7,7 @@ import { AllToursQuery, DeleteTour, ToursByUser } from "../GraphQLCalls";
 import Button from "@material-ui/core/Button";
 
 import userData from "../UserService";
+import Loading from "../Loading";
 
 class MyTours extends Component {
   constructor(props) {
@@ -30,7 +31,7 @@ class MyTours extends Component {
       ToursData = ({ userId }) => (
         <Query query={ToursByUser} variables={{ userId }}>
           {({ loading, error, data }) => {
-            if (loading) return "Loading tours...";
+            if (loading) return <Loading />;
             if (error) return `Error! ${error.message}`;
             if (data.toursByUser.length == 0) {
               return "No tours yet! Create one!";
