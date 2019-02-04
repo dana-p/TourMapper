@@ -1,6 +1,6 @@
 const Tour = require("../../Models/Tour");
 const User = require("../../Models/User");
-const { AuthenticationError } = require("apollo-server");
+const { AuthenticationError, ApolloError } = require("apollo-server");
 
 // Resolvers define the technique for fetching the types in the schema
 const tourResolvers = {
@@ -27,7 +27,9 @@ const tourResolvers = {
       var userInDb = await User.findOne(
         { userIdentifier: userInfo.sub },
         function(err) {
-          if (err) return handleError(err);
+          if (err) {
+            throw new ApolloError(err.message);
+          }
         }
       );
 
@@ -43,16 +45,14 @@ const tourResolvers = {
 
       await newTour.save(function(err) {
         if (err) {
-          //return res.status(500).send({ message: err.message }); // TODO Will this return? Since resolvers are not middleware, I don't thinkso
-          throw new Error("There was an error saving new tour to database");
+          throw new ApolloError(err.message);
         }
       });
 
       userInDb.tours.push(newTour.id);
       userInDb.save(function(err) {
         if (err) {
-          //return res.status(500).send({ message: err.message }); // TODO Will this return? Since resolvers are not middleware, I don't thinkso
-          throw new Error("There was an error saving new tour to database");
+          throw new ApolloError(err.message);
         }
       });
       return newTour;
@@ -63,8 +63,7 @@ const tourResolvers = {
         const userInfo = await user;
         var tour = await Tour.findById(id, function(err) {
           if (err) {
-            res.send(err);
-            return;
+            throw new ApolloError(err.message);
           }
         });
 
@@ -75,7 +74,7 @@ const tourResolvers = {
 
         await tour.save(function(err) {
           if (err) {
-            return res.status(500).send({ message: err.message });
+            throw new ApolloError(err.message);
           }
         });
         return tour;
@@ -90,7 +89,9 @@ const tourResolvers = {
       var userInDb = await User.findOne(
         { userIdentifier: userInfo.sub },
         function(err) {
-          if (err) return handleError(err);
+          if (err) {
+            throw new ApolloError(err.message);
+          }
         }
       );
       // Ensure that tours to be deleted belogs to the user:
@@ -102,14 +103,15 @@ const tourResolvers = {
         userInDb.tours.splice(index, 1);
         userInDb.save(function(err) {
           if (err) {
-            //return res.status(500).send({ message: err.message }); // TODO Will this return? Since resolvers are not middleware, I don't thinkso
-            throw new Error("There was an error saving new tour to database");
+            if (err) {
+              throw new ApolloError(err.message);
+            }
           }
         });
 
         return tour;
       } else {
-        throw new Error("You can't delete someone else's tours!");
+        throw new AuthenticationError("You can't delete someone else's tours!");
       }
     }
   }

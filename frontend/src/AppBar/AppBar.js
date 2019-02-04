@@ -170,7 +170,15 @@ class PrimarySearchAppBar extends React.Component {
                 to="/my-tours"
                 style={{ textDecoration: "none", color: "unset" }}
               >
-                My tours
+                My Tours
+              </Link>
+            </MenuItem>
+            <MenuItem onClick={this.handleMenuClose}>
+              <Link
+                to="/my-profile"
+                style={{ textDecoration: "none", color: "unset" }}
+              >
+                My Profile
               </Link>
             </MenuItem>
             <MenuItem onClick={this.signOut}>Sign Out</MenuItem>

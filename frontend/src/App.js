@@ -9,6 +9,7 @@ import Callback from "./Callback";
 import SecuredRoute from "./SecuredRoute/SecuredRoute";
 import NewTour from "./NewTour/NewTour";
 import PublicProfile from "./Profile/PublicProfile";
+import MyProfile from "./Profile/MyProfile";
 import auth0Client from "./Auth";
 
 import ButtonAppBar from "./AppBar/AppBar";
@@ -60,6 +61,11 @@ class App extends Component {
           path="/my-tours"
           checkingSession={this.state.checkingSession}
           component={MyTours}
+        />
+        <SecuredRoute
+          path="/my-profile"
+          checkingSession={this.state.checkingSession}
+          component={MyProfile}
         />
       </div>
     );

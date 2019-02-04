@@ -8,7 +8,8 @@ const userSchema = new Schema({
   email: { type: String, required: true },
   tours: { type: Array },
   userIdentifier: { type: String, required: true },
-  picture: { type: String }
+  picture: { type: String },
+  paypal: { type: String }
 });
 
 module.exports = mongoose.model("User", userSchema);
