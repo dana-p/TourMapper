@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
-import gql from "graphql-tag";
 import { Mutation } from "react-apollo";
 import AddIcon from "@material-ui/icons/AddCircleOutline";
 
@@ -8,60 +7,11 @@ import userData from "../UserService";
 import AttractionPopup from "../Popup/Popup";
 import FormErrors from "./FormErrors";
 
-const CreateTourMutation = gql`
-  mutation CreateTour(
-    $title: String!
-    $description: String!
-    $location: String!
-    $attractions: String!
-  ) {
-    createTour(
-      title: $title
-      description: $description
-      location: $location
-      attractions: $attractions
-    ) {
-      id
-      title
-      description
-      location
-      attractions {
-        title
-      }
-      comments {
-        comment
-        author
-      }
-    }
-  }
-`; // DANATODO: Do I need to return comments?
-
-const ToursQuery = gql`
-  {
-    tours {
-      id
-      title
-      description
-      location
-      comments {
-        comment
-      }
-    }
-  }
-`;
-
-const UserToursQuery = gql`
-  query GetToursByUser($userId: String!) {
-    toursByUser(userId: $userId) {
-      id
-      title
-      description
-      comments {
-        comment
-      }
-    }
-  }
-`;
+import {
+  CreateTourMutation,
+  AllToursQuery,
+  ToursByUser
+} from "../GraphQLCalls";
 
 class NewTour extends Component {
   constructor(props) {
@@ -210,10 +160,10 @@ class NewTour extends Component {
         update={(cache, { data: { createTour } }) => {
           try {
             const tours = cache.readQuery({
-              query: ToursQuery
+              query: AllToursQuery
             });
             cache.writeQuery({
-              query: ToursQuery,
+              query: AllToursQuery,
               data: {
                 tours: tours.tours.push(createTour)
               }
@@ -223,13 +173,13 @@ class NewTour extends Component {
           } finally {
             try {
               const mytours = cache.readQuery({
-                query: UserToursQuery,
+                query: ToursByUser,
                 variables: {
                   userId: this.state.userId
                 }
               });
               cache.writeQuery({
-                query: UserToursQuery,
+                query: ToursByUser,
                 variables: {
                   userId: this.state.userId
                 },

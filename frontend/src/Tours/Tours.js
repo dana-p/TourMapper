@@ -1,29 +1,15 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 
-import gql from "graphql-tag";
 import { Query } from "react-apollo";
+import { AllToursQuery } from "../GraphQLCalls";
 
 import ListOfTours from "./ListOfTours";
-
-const ToursQuery = gql`
-  {
-    tours {
-      id
-      title
-      description
-      location
-      comments {
-        comment
-      }
-    }
-  }
-`;
 
 class Tours extends Component {
   render() {
     const ToursData = () => (
-      <Query query={ToursQuery}>
+      <Query query={AllToursQuery}>
         {({ loading, error, data }) => {
           if (loading) return "Loading tours...";
           if (error) return `Error! ${error.message}`;

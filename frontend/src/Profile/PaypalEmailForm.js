@@ -3,32 +3,9 @@ import userData from "../UserService";
 import FormErrors from "../NewTour/FormErrors";
 
 import { Mutation } from "react-apollo";
-import gql from "graphql-tag";
 import { validateEmail, validateUrl } from "../Helpers";
 
-const UserQuery = gql`
-  query GetUser($id: ID!) {
-    user(id: $id) {
-      id
-      name
-      picture
-      email
-      paypal
-    }
-  }
-`;
-
-const AddPaypalAndEmail = gql`
-  mutation AddPaypalAndEmail($id: ID!, $paypal: String, $email: String) {
-    addPaypalAndEmail(id: $id, paypal: $paypal, email: $email) {
-      id
-      name
-      picture
-      email
-      paypal
-    }
-  }
-`;
+import { UserQuery, AddPaypalAndEmail } from "../GraphQLCalls";
 
 class PaypalEmailForm extends Component {
   constructor(props) {

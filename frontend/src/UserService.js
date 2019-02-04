@@ -1,20 +1,6 @@
-import gql from "graphql-tag";
 import { client } from "./index";
 
-const GetUser = gql`
-  mutation {
-    createUser {
-      id
-      name
-      email
-      tours
-      firstName
-      lastName
-      userIdentifier
-      picture
-    }
-  }
-`; // DANATODO: Do I need more information for the tours? Do I even need the tours???
+import { GetUser } from "./GraphQLCalls";
 
 class UserData {
   userData = null;

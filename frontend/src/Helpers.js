@@ -9,6 +9,6 @@ function validateUrl(url) {
 }
 
 module.exports = {
-  validateEmail: validateEmail,
-  validateUrl: validateUrl
+  validateEmail,
+  validateUrl
 };

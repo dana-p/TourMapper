@@ -1,30 +1,10 @@
 import React, { Component, Fragment } from "react";
 import { withRouter } from "react-router-dom";
 import auth0Client from "../Auth";
-import gql from "graphql-tag";
+
 import { Mutation } from "react-apollo";
 
-const SubmitCommentMutation = gql`
-  mutation AddComment($id: ID!, $comment: String!) {
-    addCommentToTour(id: $id, comment: $comment) {
-      id
-      title
-      description
-      attractions {
-        title
-        description
-        markerPosition {
-          lat
-          lng
-        }
-      }
-      comments {
-        comment
-        author
-      }
-    }
-  }
-`;
+import { SubmitCommentMutation } from "../GraphQLCalls";
 
 class SubmitComment extends Component {
   constructor(props) {

@@ -1,51 +1,12 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import gql from "graphql-tag";
+
 import { Query, Mutation } from "react-apollo";
+import { AllToursQuery, DeleteTour, ToursByUser } from "../GraphQLCalls";
 
 import Button from "@material-ui/core/Button";
 
 import userData from "../UserService";
-
-const ToursQuery = gql`
-  query GetToursByUser($userId: String!) {
-    toursByUser(userId: $userId) {
-      id
-      title
-      description
-      comments {
-        comment
-      }
-    }
-  }
-`;
-
-const DeleteTour = gql`
-  mutation DeleteTour($id: ID!) {
-    deleteTour(id: $id) {
-      id
-      title
-      description
-      comments {
-        comment
-      }
-    }
-  }
-`;
-
-const AllToursQuery = gql`
-  {
-    tours {
-      id
-      title
-      description
-      location
-      comments {
-        comment
-      }
-    }
-  }
-`;
 
 class MyTours extends Component {
   constructor(props) {
@@ -67,7 +28,7 @@ class MyTours extends Component {
     let ToursData = () => <h1>Loading your tours...</h1>;
     if (this.state.userId != null) {
       ToursData = ({ userId }) => (
-        <Query query={ToursQuery} variables={{ userId }}>
+        <Query query={ToursByUser} variables={{ userId }}>
           {({ loading, error, data }) => {
             if (loading) return "Loading tours...";
             if (error) return `Error! ${error.message}`;
@@ -91,7 +52,7 @@ class MyTours extends Component {
                   mutation={DeleteTour}
                   update={(cache, { data: { deleteTour } }) => {
                     const cachedTours = cache.readQuery({
-                      query: ToursQuery,
+                      query: ToursByUser,
                       variables: {
                         userId: userId
                       }
@@ -101,7 +62,7 @@ class MyTours extends Component {
                     );
 
                     cache.writeQuery({
-                      query: ToursQuery,
+                      query: ToursByUser,
                       variables: {
                         userId: userId
                       },

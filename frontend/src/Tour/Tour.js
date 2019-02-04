@@ -1,34 +1,11 @@
 import React, { Component } from "react";
 import SubmitComment from "./SubmitComment";
 import { Link } from "react-router-dom";
-import gql from "graphql-tag";
 import { Query } from "react-apollo";
 
 import ViewTourMap from "../Map/ViewTourMap";
 
-const TourQuery = gql`
-  query GetTour($id: ID!) {
-    tour(id: $id) {
-      id
-      title
-      description
-      attractions {
-        title
-        description
-        markerPosition {
-          lat
-          lng
-        }
-      }
-      author
-      authorId
-      comments {
-        comment
-        author
-      }
-    }
-  }
-`;
+import { TourQuery } from "../GraphQLCalls";
 
 class Tour extends Component {
   constructor(props) {

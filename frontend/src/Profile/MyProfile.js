@@ -13,19 +13,8 @@ import userData from "../UserService";
 import PaypalEmailForm from "./PaypalEmailForm";
 
 import { Query } from "react-apollo";
-import gql from "graphql-tag";
 
-const UserQuery = gql`
-  query GetUser($id: ID!) {
-    user(id: $id) {
-      id
-      name
-      picture
-      email
-      paypal
-    }
-  }
-`;
+import { UserQuery } from "../GraphQLCalls";
 
 const styles = theme => ({
   layout: {

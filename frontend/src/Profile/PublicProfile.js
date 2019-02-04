@@ -11,32 +11,8 @@ import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 
 import { Query } from "react-apollo";
-import gql from "graphql-tag";
 
-const UserQuery = gql`
-  query GetUser($id: ID!) {
-    user(id: $id) {
-      id
-      name
-      firstName
-      picture
-      email
-      tours
-      paypal
-    }
-  }
-`;
-
-const UserToursQuery = gql`
-  query GetToursByUser($userId: String!) {
-    toursByUser(userId: $userId) {
-      id
-      title
-      description
-      location
-    }
-  }
-`;
+import { UserQuery, ToursByUser } from "../GraphQLCalls";
 
 const styles = theme => ({
   layout: {
@@ -133,7 +109,7 @@ class PublicProfile extends React.Component {
     let ToursData = () => <h1>Loading your tours...</h1>;
     if (this.state.userId != null) {
       ToursData = ({ userId }) => (
-        <Query query={UserToursQuery} variables={{ userId }}>
+        <Query query={ToursByUser} variables={{ userId }}>
           {({ loading, error, data }) => {
             if (loading) return "Loading tours...";
             if (error) return `Error! ${error.message}`;
@@ -161,7 +137,7 @@ class PublicProfile extends React.Component {
     }
 
     const ToursData2 = ({ userId }) => (
-      <Query query={UserToursQuery} variables={{ userId }}>
+      <Query query={ToursByUser} variables={{ userId }}>
         {({ loading, error, data }) => {
           if (loading) return "Loading tours...";
           if (error) return `Error! ${error.message}`;
