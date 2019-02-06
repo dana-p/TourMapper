@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { Query } from "react-apollo";
 
 import ViewTourMap from "../Map/ViewTourMap";
+import ViewTourAttractions from "./ViewTourAttractions";
 import Loading from "../Loading";
 
 import { TourQuery } from "../GraphQLCalls";
@@ -13,7 +14,8 @@ class Tour extends Component {
     super(props);
     this.state = {
       tour: null,
-      tourId: null
+      tourId: null,
+      zoomto: null
     };
   }
 
@@ -30,6 +32,13 @@ class Tour extends Component {
       tourId: params.tourId
     });
   }
+
+  zoomToAttraction = location => {
+    console.log("Heyooooooooooooooooo" + location);
+    this.setState({
+      zoomto: location
+    });
+  };
 
   render() {
     const TourData = ({ id }) => (
@@ -49,7 +58,15 @@ class Tour extends Component {
                 </Link>
               </div>
               <p className="lead">{data.tour.description}</p>
-              <ViewTourMap markers={data.tour.attractions} />
+              <ViewTourMap
+                markers={data.tour.attractions}
+                zoomto={this.state.zoomto}
+              />
+              <hr className="my-4" />
+              <ViewTourAttractions
+                attractions={data.tour.attractions}
+                zoomToAttraction={this.zoomToAttraction}
+              />
               <hr className="my-4" />
               <SubmitComment tourId={data.tour.id} tourQuery={this.TourQuery} />
 

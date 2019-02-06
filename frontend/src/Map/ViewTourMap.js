@@ -26,7 +26,9 @@ class ViewTourMap extends React.Component {
     lc.addTo(this.map);
     lc.start();
 
-    this.map.setView(this.props.markers[0].markerPosition, 16);
+    if (this.props.zoomto != null) {
+      this.map.setView(this.props.zoomto, 16);
+    }
 
     let self = this;
     this.props.markers.forEach(function(markerInfo) {
