@@ -8,7 +8,7 @@ My husband and I were in Quito when we were using an application that showed us 
 
 In this app, tour guides and locals can post their tours for free and tourists can check them out! If a tourist is feeling grateful/generous, he is more than welcomed to tip the tour guide or hire them for a real-life tour! 
 
-## Technologies used
+## Technology Stack
 ### Front End
 React, Leaflet, Material UI, Auth0, Apollo GraphQL 
 
