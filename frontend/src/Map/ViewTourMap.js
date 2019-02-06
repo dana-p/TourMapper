@@ -24,10 +24,11 @@ class ViewTourMap extends React.Component {
 
     const lc = new Locate();
     lc.addTo(this.map);
-    lc.start();
 
     if (this.props.zoomto != null) {
       this.map.setView(this.props.zoomto, 16);
+    } else {
+      lc.start();
     }
 
     let self = this;
