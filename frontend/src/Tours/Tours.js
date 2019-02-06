@@ -5,6 +5,7 @@ import { Query } from "react-apollo";
 import { AllToursQuery } from "../GraphQLCalls";
 
 import ListOfTours from "./ListOfTours";
+import Welcome from "./Welcome";
 
 import Loading from "../Loading";
 
@@ -23,17 +24,9 @@ class Tours extends Component {
 
     return (
       <div className="container">
+        <Welcome />
         <div className="row">
           <ToursData />
-          <Link to="/new-tour">
-            <div className="card text-white bg-secondary mb-3">
-              <div className="card-header">Want to add a tour? Start here!</div>
-              <div className="card-body">
-                <h4 className="card-title">+ New Tour</h4>
-                <p className="card-text">Thank you for your contribution!</p>
-              </div>
-            </div>
-          </Link>
         </div>
       </div>
     );
