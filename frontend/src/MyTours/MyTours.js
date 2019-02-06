@@ -26,15 +26,26 @@ class MyTours extends Component {
   }
 
   render() {
-    let ToursData = () => <h1>Loading your tours...</h1>;
+    let ToursData = () => <Loading />;
     if (this.state.userId != null) {
       ToursData = ({ userId }) => (
         <Query query={ToursByUser} variables={{ userId }}>
           {({ loading, error, data }) => {
             if (loading) return <Loading />;
             if (error) return `Error! ${error.message}`;
-            if (data.toursByUser.length == 0) {
-              return "No tours yet! Create one!";
+            if (data.toursByUser.length === 0) {
+              return (
+                <div className="col-sm-12 col-md-4 col-lg-3">
+                  <Link to="/new-tour">
+                    <div className="card text-white bg-success mb-3">
+                      <div className="card-header">No tours yet!</div>
+                      <div className="card-body">
+                        <h4 className="card-title">Create One!</h4>
+                      </div>
+                    </div>
+                  </Link>
+                </div>
+              );
             }
             return data.toursByUser.map(tour => (
               <div key={tour.id} className="col-sm-12 col-md-4 col-lg-3">

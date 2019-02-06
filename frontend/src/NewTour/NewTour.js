@@ -77,7 +77,7 @@ class NewTour extends Component {
         formValidity.location = value.length > 0;
         fieldValidationErrors.location = formValidity.location
           ? ""
-          : " Location can't be empty.";
+          : " City can't be empty.";
         break;
       default:
         break;
@@ -232,7 +232,7 @@ class NewTour extends Component {
                       />
                     </div>
                     <div className="form-group">
-                      <label htmlFor="location">Location:</label>
+                      <label htmlFor="location">City:</label>
                       <input
                         disabled={this.state.disabled}
                         type="text"

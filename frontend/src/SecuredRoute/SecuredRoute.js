@@ -1,6 +1,7 @@
 import React from "react";
 import { Route } from "react-router-dom";
 import auth0Client from "../Auth";
+import Loading from "../Loading";
 
 function SecuredRoute(props) {
   const { component: Component, path, checkingSession } = props;
@@ -9,8 +10,7 @@ function SecuredRoute(props) {
       path={path}
       render={() => {
         // Check if token is saved
-        if (checkingSession)
-          return <h3 className="text-center">Validating session...</h3>;
+        if (checkingSession) return <Loading />;
 
         // Check if user is authenticated before showing page
         if (!auth0Client.isAuthenticated()) {

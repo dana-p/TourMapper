@@ -107,7 +107,7 @@ class PublicProfile extends React.Component {
       </Query>
     );
 
-    let ToursData = () => <h1>Loading your tours...</h1>;
+    let ToursData = () => <Loading />;
     if (this.state.userId != null) {
       ToursData = ({ userId }) => (
         <Query query={ToursByUser} variables={{ userId }}>
