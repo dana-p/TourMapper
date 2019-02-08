@@ -45,7 +45,7 @@ class AttractionPopup extends Component {
         formValidity.description = value.length >= 10;
         fieldValidationErrors.description = formValidity.description
           ? ""
-          : " Description is too short.";
+          : " Description is too short. Minimum is 10 characters.";
         break;
       default:
         break;

@@ -71,7 +71,7 @@ class NewTour extends Component {
         formValidity.description = value.length >= 20;
         fieldValidationErrors.description = formValidity.description
           ? ""
-          : " Description is too short.";
+          : " Description is too short. Minimum is 10 characters.";
         break;
       case "location":
         formValidity.location = value.length > 0;
