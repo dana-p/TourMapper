@@ -82,8 +82,11 @@ const server = new ApolloServer({
  | MongoDB
  |--------------------------------------
  */
-
-mongoose.connect(config.MONGO_URI);
+if (process.env.NODE_ENV === "dev") {
+  mongoose.connect(config.MONGO_URI_DEV);
+} else {
+  mongoose.connect(config.MONGO_URI_PROD);
+}
 const monDb = mongoose.connection;
 
 monDb.on("error", function() {
