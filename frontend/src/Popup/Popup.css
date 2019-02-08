@@ -11,13 +11,13 @@
 }
 .popup_inner {
   position: absolute;
-  left: 25%;
-  right: 25%;
+  left: 5%;
+  right: 5%;
   top: 10%;
   /* bottom: 50%; */
   margin: auto;
   background: white;
-  max-width: 600px;
+  max-width: 1000px;
 }
 
 .popup_container {

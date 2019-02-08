@@ -1,3 +1,23 @@
 .left-padding {
   padding-left: 1.25rem;
 }
+
+.btn:disabled,
+.btn.disabled {
+  color: #fff;
+  border-color: #a0a0a0;
+  background-color: #a0a0a0;
+  opacity: 1;
+}
+.btn:disabled:hover,
+.btn:disabled:focus,
+.btn.disabled:hover,
+.btn.disabled:focus {
+  color: #fff;
+  border-color: #a0a0a0;
+  background-color: #a0a0a0;
+  opacity: 1;
+}
+
+/* opacity: "1",
+backgroundColor: "#75818d", */
