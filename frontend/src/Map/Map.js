@@ -1,6 +1,9 @@
 import React from "react";
 import L from "leaflet";
 import Locate from "leaflet.locatecontrol";
+import { GeoSearchControl, OpenStreetMapProvider } from "leaflet-geosearch";
+
+import { Geocoder } from "leaflet-control-geocoder";
 
 import "./Map.css";
 
@@ -23,6 +26,18 @@ class Map extends React.Component {
         )
       ]
     });
+
+    // this.addSeachBox();
+
+    var self = this;
+    L.Control.geocoder({
+      defaultMarkGeocode: false
+    })
+      .on("markgeocode", function(e) {
+        self.map.setView(e.geocode.center, 16);
+        self.marker = L.marker(e.geocode.center).addTo(self.map);
+      })
+      .addTo(self.map);
 
     const lc = new Locate();
     lc.addTo(this.map);
@@ -48,6 +63,15 @@ class Map extends React.Component {
       this.marker.setLatLng(this.props.markerPosition);
     }
   }
+
+  addSeachBox = () => {
+    const provider = new OpenStreetMapProvider();
+    const searchControl = new GeoSearchControl({
+      provider: provider,
+      style: "bar"
+    });
+    this.map.addControl(searchControl);
+  };
 
   render() {
     return <div id="map" style={mapStyle} />;

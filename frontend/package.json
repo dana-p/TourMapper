@@ -10,6 +10,8 @@
     "auth0-js": "^9.8.2",
     "graphql": "^14.0.2",
     "leaflet": "^1.4.0",
+    "leaflet-control-geocoder": "^1.6.0",
+    "leaflet-geosearch": "^2.7.0",
     "leaflet.locatecontrol": "^0.66.0",
     "react": "^16.7.0",
     "react-apollo": "^2.3.3",
