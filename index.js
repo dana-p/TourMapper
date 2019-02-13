@@ -17,7 +17,7 @@ const { ApolloServer } = require("apollo-server-express");
 const typeDefs = require("./server/Graphql/typedefs");
 const resolvers = require("./server/Graphql/resolvers");
 const config = require("./server/config");
-const mongoconfig = require("./server/mongoconfig");
+//const mongoconfig = require("./server/mongoconfig");
 
 var port = process.env.PORT || 4000;
 
@@ -93,7 +93,7 @@ const monDb = mongoose.connection;
 monDb.on("error", function() {
   console.error(
     "MongoDB Connection Error. Please make sure that",
-    mongoconfig.MONGO_URI_PROD,
+    process.env.MONGO_URI_PROD,
     "is running."
   );
 });
