@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import FormErrors from "../NewTour/FormErrors";
 
+import GoogleMap from "../Map/GoogleMap";
 import Map from "../Map/Map";
 import "./Popup.css";
 
@@ -9,15 +10,25 @@ class AttractionPopup extends Component {
   constructor(props) {
     super(props);
 
+    var title = "";
+    var location = { lat: 0, lng: 0 };
+    var markerSelected = false;
+    if (props.suggestion.key !== undefined) {
+      title = props.suggestion.key;
+      location = props.suggestion.value;
+      location = props.suggestion.value;
+      markerSelected = true;
+    }
     this.state = {
-      title: "",
+      title: title,
       description: "",
-      markerPosition: { lat: 0, lng: 0 },
+      markerPosition: location,
+      panToLocation: markerSelected,
       formErrors: { title: "", description: "", markerPosition: "" },
       formValidity: {
-        title: false,
+        title: markerSelected,
         description: false,
-        markerPosition: false
+        markerPosition: markerSelected
       }
     };
   }
@@ -94,6 +105,7 @@ class AttractionPopup extends Component {
 
   render() {
     const { markerPosition } = this.state;
+    const { panToLocation } = this.state;
 
     return (
       <div className="popup">
@@ -115,6 +127,7 @@ class AttractionPopup extends Component {
                         className="form-control"
                         placeholder="Attraction official name"
                         id="title"
+                        value={this.state.title}
                       />
                     </div>
                     <div className="form-group">
@@ -132,6 +145,7 @@ class AttractionPopup extends Component {
                     </div>
                     <Map
                       markerPosition={markerPosition}
+                      panToLocation={panToLocation}
                       lastMarkerPosition={this.props.lastMarkerPosition}
                       mapClickEvent={this.onMapClick}
                     />

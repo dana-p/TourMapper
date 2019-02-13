@@ -1,7 +1,11 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import { Mutation } from "react-apollo";
-import AddIcon from "@material-ui/icons/AddCircleOutline";
+import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
+
+import PropTypes from "prop-types";
+import { withStyles } from "@material-ui/core/styles";
 
 import userData from "../UserService";
 import AttractionPopup from "../Popup/Popup";
@@ -12,6 +16,12 @@ import {
   AllToursQuery,
   ToursByUser
 } from "../GraphQLCalls";
+
+const styles = theme => ({
+  hover: {
+    cursor: "pointer"
+  }
+});
 
 class NewTour extends Component {
   constructor(props) {
@@ -24,6 +34,7 @@ class NewTour extends Component {
       location: "",
       showpopup: false,
       attractions: [],
+      suggestions: [],
       lastMarkerPosition: "",
       formErrors: { title: "", description: "", location: "", attractions: "" },
       formValidity: {
@@ -42,6 +53,7 @@ class NewTour extends Component {
     this.setState({
       userId: user.id
     });
+    this.getAttractionsNearbyCurrentLocation();
   }
 
   errorClass(error) {
@@ -101,11 +113,15 @@ class NewTour extends Component {
     });
   }
 
-  togglePopup() {
+  togglePopup = suggestion => {
+    if (suggestion === undefined || suggestion.key === undefined) {
+      suggestion = "";
+    }
     this.setState({
-      showPopup: !this.state.showPopup
+      showPopup: !this.state.showPopup,
+      suggestion: suggestion
     });
-  }
+  };
 
   addPointToTour = pointInfo => {
     var { attractions } = this.state;
@@ -121,7 +137,111 @@ class NewTour extends Component {
     this.togglePopup();
 
     this.validateAttractions();
-    console.log(this.state);
+    this.checkNearbyAttractions(pointInfo.markerPosition);
+  };
+
+  getAttractionsNearbyCurrentLocation = () => {
+    var self = this;
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(function(position, err) {
+        if (err) {
+          return;
+        }
+        var pos = [];
+        pos.lat = position.coords.latitude;
+        pos.lng = position.coords.longitude;
+        self.checkNearbyAttractions(pos);
+      });
+    }
+  };
+
+  checkNearbyAttractions = position => {
+    const urlFirst = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${
+      position.lat
+    },${position.lng}&key=AIzaSyAeN4sAOd_RfE2i83ISjp75Ol1ksylV98c`;
+
+    var attractions = this.state.attractions;
+
+    fetch(urlFirst)
+      .then(res => {
+        return res.json();
+      })
+      .then(res => {
+        if (res.status === "OK") {
+          var plusCode = res["plus_code"]["compound_code"];
+          var location = plusCode.slice(
+            plusCode.indexOf(" ") + 1,
+            plusCode.length
+          );
+
+          var request = {
+            query: "Point of interest in " + location,
+            radius: "500",
+            location: position
+          };
+          var service = new window.google.maps.places.PlacesService(
+            document.createElement("div")
+          );
+          service.textSearch(request, (results, status) => {
+            if (status === window.google.maps.places.PlacesServiceStatus.OK) {
+              var suggestions = [];
+              results.forEach(element => {
+                // Do not display attractions that has been added to the tour.
+                if (!attractions.some(attr => attr.title === element.name)) {
+                  suggestions.push({
+                    key: element.name,
+                    value: {
+                      lat: element.geometry.location.lat(),
+                      lng: element.geometry.location.lng()
+                    }
+                  });
+                }
+              });
+              this.setState({
+                suggestions: suggestions
+              });
+              // }
+            }
+          });
+        }
+      })
+      .catch(error => {
+        console.log(error);
+        this.setState({ loading: false });
+      });
+  };
+
+  checkNearbyAttractionsOld = position => {
+    var request = {
+      location: position,
+      radius: 1000,
+      type: [
+        "aquarium",
+        "amusement_park",
+        "art_gallery",
+        "city_hall",
+        "church",
+        "mosque",
+        "museum",
+        "shopping_mall",
+        "synagogue",
+        "train_station",
+        "zoo"
+      ],
+      fields: ["name", "geometry", "rating"]
+    };
+
+    var service = new window.google.maps.places.PlacesService(
+      document.createElement("div")
+    );
+
+    service.nearbySearch(request, function(results, status) {
+      if (status === window.google.maps.places.PlacesServiceStatus.OK) {
+        for (var i = 0; i < results.length; i++) {
+          console.log(results[i]); // THIS WORKS!
+        }
+      }
+    });
   };
 
   listPointsOfAttraction = () => {
@@ -134,6 +254,27 @@ class NewTour extends Component {
     }
 
     return list;
+  };
+
+  nearbyPoints = () => {
+    const { classes } = this.props;
+    return (
+      <Grid container spacing={24}>
+        {this.state.suggestions.map(attraction => (
+          <Grid item xs={6} sm={3}>
+            <Typography
+              key={attraction.key}
+              variant="subtitle1"
+              color="textSecondary"
+              classes={{ root: classes.hover }}
+              onClick={() => this.togglePopup(attraction)}
+            >
+              {attraction.key}
+            </Typography>
+          </Grid>
+        ))}
+      </Grid>
+    );
   };
 
   validateAttractions() {
@@ -248,16 +389,28 @@ class NewTour extends Component {
                     <div className="form-group">
                       <label>Points of Attraction:</label>
                       <ol>{this.listPointsOfAttraction()}</ol>
-                      <AddIcon onClick={this.togglePopup.bind(this)} />
+                      <button
+                        className="btn btn-primary"
+                        onClick={this.togglePopup}
+                      >
+                        Add Point
+                      </button>
                       {this.state.showPopup ? (
                         <AttractionPopup
                           text="Close Me"
-                          closePopup={this.togglePopup.bind(this)}
+                          closePopup={this.togglePopup}
                           addPoint={this.addPointToTour}
                           lastMarkerPosition={this.state.lastMarkerPosition}
+                          suggestion={this.state.suggestion}
                         />
                       ) : null}
                     </div>
+                    {this.state.suggestions.length > 0 && (
+                      <div className="form-group">
+                        <label>Suggested nearby points. Click to add.</label>
+                        {this.nearbyPoints()}
+                      </div>
+                    )}
                     <button
                       disabled={!this.state.formValid}
                       className="btn btn-primary"
@@ -289,4 +442,8 @@ class NewTour extends Component {
   }
 }
 
-export default withRouter(NewTour);
+NewTour.propTypes = {
+  classes: PropTypes.object.isRequired
+};
+
+export default withStyles(styles)(withRouter(NewTour));

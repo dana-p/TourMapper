@@ -27,22 +27,17 @@ class Map extends React.Component {
       ]
     });
 
-    // this.addSeachBox();
+    // this.addSeachBox(); // does not work
 
-    var self = this;
-    L.Control.geocoder({
-      defaultMarkGeocode: false
-    })
-      .on("markgeocode", function(e) {
-        self.map.setView(e.geocode.center, 16);
-        self.marker = L.marker(e.geocode.center).addTo(self.map);
-      })
-      .addTo(self.map);
+    this.addGeocoderSearchBox();
+
+    // this.addGoogleSearchBox(); // would like to use instead, but clicking it clicks on map
 
     const lc = new Locate();
     lc.addTo(this.map);
-
-    if (
+    if (this.props.panToLocation) {
+      this.map.setView(this.props.markerPosition, 16);
+    } else if (
       !this.props.lastMarkerPosition ||
       this.props.lastMarkerPosition === ""
     ) {
@@ -71,6 +66,51 @@ class Map extends React.Component {
       style: "bar"
     });
     this.map.addControl(searchControl);
+  };
+
+  addGeocoderSearchBox = () => {
+    var self = this;
+    L.Control.geocoder({
+      defaultMarkGeocode: false
+    })
+      .on("markgeocode", function(e) {
+        self.map.setView(e.geocode.center, 16);
+        self.marker = L.marker(e.geocode.center).addTo(self.map);
+        var position = [];
+        position.latlng = e.geocode.center;
+        self.props.mapClickEvent(position);
+      })
+      .addTo(self.map);
+  };
+
+  addGoogleSearchBox = () => {
+    var self = this;
+    var GoogleSearch = L.Control.extend({
+      onAdd: function() {
+        var element = document.createElement("input");
+        element.id = "searchBox";
+        return element;
+      }
+    });
+
+    new GoogleSearch().addTo(self.map);
+
+    var input = document.getElementById("searchBox");
+
+    var searchBox = new window.google.maps.places.SearchBox(input);
+
+    searchBox.addListener("places_changed", function() {
+      var places = searchBox.getPlaces();
+
+      if (places.length === 0) {
+        return;
+      }
+
+      self.marker = L.marker([
+        places[0].geometry.location.lat(),
+        places[0].geometry.location.lng()
+      ]).addTo(self.map);
+    });
   };
 
   render() {
