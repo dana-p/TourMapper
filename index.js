@@ -17,7 +17,7 @@ const { ApolloServer } = require("apollo-server-express");
 const typeDefs = require("./server/Graphql/typedefs");
 const resolvers = require("./server/Graphql/resolvers");
 const config = require("./server/config");
-//const mongoconfig = require("./server/mongoconfig");
+const mongoconfig = require("./server/mongoconfig");
 
 var port = process.env.PORT || 4000;
 
