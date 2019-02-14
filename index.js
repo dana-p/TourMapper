@@ -17,7 +17,6 @@ const { ApolloServer } = require("apollo-server-express");
 const typeDefs = require("./server/Graphql/typedefs");
 const resolvers = require("./server/Graphql/resolvers");
 const config = require("./server/config");
-const mongoconfig = require("./server/mongoconfig");
 
 var port = process.env.PORT || 4000;
 
@@ -84,7 +83,7 @@ const server = new ApolloServer({
  |--------------------------------------
  */
 if (process.env.NODE_ENV === "dev") {
-  mongoose.connect(mongoconfig.MONGO_URI_DEV);
+  mongoose.connect(process.env.MONGO_URI_DEV);
 } else {
   mongoose.connect(process.env.MONGO_URI_PROD);
 }
