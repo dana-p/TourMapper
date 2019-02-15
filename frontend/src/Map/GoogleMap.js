@@ -1,6 +1,8 @@
 import React from "react";
 import { Map, Marker, GoogleApiWrapper } from "google-maps-react";
 
+import { key } from "../google";
+
 const mapStyles = {
   height: "300px",
   width: "100%"
@@ -89,5 +91,5 @@ class GoogleMap extends React.Component {
 }
 
 export default GoogleApiWrapper({
-  apiKey: "AIzaSyCGby-2CdrGUWmmzII9TfzrN_u-05QskjI"
+  apiKey: key
 })(GoogleMap);

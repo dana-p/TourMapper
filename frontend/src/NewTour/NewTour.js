@@ -3,6 +3,8 @@ import { withRouter } from "react-router-dom";
 import { Mutation } from "react-apollo";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
+import Divider from "@material-ui/core/Divider";
+import Button from "@material-ui/core/Button";
 
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
@@ -10,6 +12,13 @@ import { withStyles } from "@material-ui/core/styles";
 import userData from "../UserService";
 import AttractionPopup from "../Popup/Popup";
 import FormErrors from "./FormErrors";
+
+import { key } from "../google";
+
+import syllable from "syllable";
+
+import InfoIcon from "@material-ui/icons/InfoOutlined";
+import Popup from "reactjs-popup";
 
 import {
   CreateTourMutation,
@@ -44,8 +53,12 @@ class NewTour extends Component {
         attractions: false
       },
       formValid: false,
-      userId: ""
+      userId: "",
+      backgroundColor: "white",
+      showColor: true
     };
+
+    this.hues = [0, 0, 0, 30, 30, 45, 60, 75, 90, 120, 120];
   }
 
   async componentDidMount() {
@@ -65,6 +78,7 @@ class NewTour extends Component {
     const value = e.target.value;
     this.setState({ [name]: value }, () => {
       this.validateField(name, value);
+      this.highlightText();
     });
   }
 
@@ -102,6 +116,59 @@ class NewTour extends Component {
       this.validateForm
     );
   }
+
+  turnOffColor = () => {
+    this.setState({
+      showColor: false,
+      backgroundColor: "white"
+    });
+  };
+
+  turnOnColor = () => {
+    this.setState({
+      showColor: true
+    });
+  };
+
+  highlightText = () => {
+    var { description, showColor } = this.state;
+    if (description.length === 0 || !showColor) {
+      this.setState({
+        backgroundColor: "white"
+      });
+      return;
+    }
+
+    // Flesch reading ease formula:
+    // 206.835 - 1.015*(words/sentences) - 84.6*(syllables/words);
+    // score 90-100: 5th grade, very easy to read.
+    // score 60-70: 8/9th grade. Easily understood by 13-15year olds
+    // score <50: college level. The lower, the more difficult.
+
+    var syllableCount = syllable(description);
+    // Sentence count -> Split on special characters (.?!) and then eliminate sentences that are just white space/empty.
+    var sentenceCount = description
+      .split(/\w[.?!](\s|$)/)
+      .filter(x => !/^\s*$/.test(x)).length;
+    var wordCount = description.split(" ").length;
+
+    // Reading ease
+    var readingEaseScore =
+      206.835 -
+      1.015 * (wordCount / sentenceCount) -
+      84.6 * (syllableCount / wordCount);
+
+    var val = 120; // Green
+    if (readingEaseScore < 100 && readingEaseScore > 0)
+      val = this.hues[Math.floor(readingEaseScore / 10)];
+    else if (readingEaseScore <= 0) val = 0; // Red
+
+    this.setState({
+      backgroundColor: "hsl(" + [val, "93%", "85%"].join(", ") + ")"
+    });
+
+    // return this.processor.runSync(this.processor.parse(description))
+  };
 
   validateForm() {
     this.setState({
@@ -158,7 +225,7 @@ class NewTour extends Component {
   checkNearbyAttractions = position => {
     const urlFirst = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${
       position.lat
-    },${position.lng}&key=AIzaSyAeN4sAOd_RfE2i83ISjp75Ol1ksylV98c`;
+    },${position.lng}&key=${key}`;
 
     var attractions = this.state.attractions;
 
@@ -177,7 +244,8 @@ class NewTour extends Component {
           var request = {
             query: "Point of interest in " + location,
             radius: "500",
-            location: position
+            location: position,
+            key: key
           };
           var service = new window.google.maps.places.PlacesService(
             document.createElement("div")
@@ -295,6 +363,65 @@ class NewTour extends Component {
   }
 
   render() {
+    const ColorInfo = () => (
+      <Popup trigger={<InfoIcon className="button" />} modal>
+        {close => (
+          <div>
+            <a className="close" onClick={close}>
+              &times;
+            </a>
+            <Typography variant="h6" gutterBottom>
+              Flesch–Kincaid readability
+            </Typography>
+            <Divider />
+            <Typography>
+              {" "}
+              <br />
+              The background color indicates how difficult a passage in English
+              is to understand.
+              <br />
+              Green is text understood by children in grade 5 (11 year olds).
+              <br />
+              Yellow is understood by Grade 9 students.
+              <br />
+              Red indicated difficult to read, college level.
+              <br />
+              People that take your tours might not have English as their first
+              language. Try to make the text easy for them to understand!
+            </Typography>
+            <div className="actions">
+              {this.state.showColor && (
+                <Button
+                  color="primary"
+                  variant="contained"
+                  onClick={this.turnOffColor}
+                >
+                  Deactivate Colors
+                </Button>
+              )}
+              {!this.state.showColor && (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={this.turnOnColor}
+                >
+                  Activate Colors
+                </Button>
+              )}
+              <Button
+                color="primary"
+                onClick={() => {
+                  close();
+                }}
+              >
+                Close
+              </Button>
+            </div>
+          </div>
+        )}
+      </Popup>
+    );
+
     return (
       <Mutation
         mutation={CreateTourMutation}
@@ -358,8 +485,9 @@ class NewTour extends Component {
                       />
                     </div>
                     <div className="form-group">
+                      <ColorInfo />
                       <label htmlFor="description">Description:</label>
-                      <input
+                      <textarea
                         disabled={this.state.disabled}
                         type="text"
                         onChange={e => {
@@ -370,6 +498,13 @@ class NewTour extends Component {
                         )}`}
                         placeholder="Give a quick introduction to your tour"
                         id="description"
+                        style={{
+                          backgroundColor: this.state.backgroundColor,
+                          color:
+                            this.state.backgroundColor === "white"
+                              ? ""
+                              : "black"
+                        }}
                       />
                     </div>
                     <div className="form-group">
