@@ -16,6 +16,7 @@ import FormErrors from "./FormErrors";
 import { key } from "../google";
 
 import syllable from "syllable";
+import sum from "sum";
 
 import InfoIcon from "@material-ui/icons/InfoOutlined";
 import Popup from "reactjs-popup";
@@ -55,7 +56,8 @@ class NewTour extends Component {
       formValid: false,
       userId: "",
       backgroundColor: "white",
-      showColor: true
+      showColor: true,
+      titleSuggestions: []
     };
 
     this.hues = [0, 0, 0, 30, 30, 45, 60, 75, 90, 120, 120];
@@ -73,12 +75,21 @@ class NewTour extends Component {
     return error.length === 0 ? "" : "is-invalid";
   }
 
+  setTitle = title => {
+    var e = [];
+    e.target = [];
+    e.target.id = "title";
+    e.target.value = title;
+    this.handleUserInput(e);
+  };
+
   handleUserInput(e) {
     const name = e.target.id;
     const value = e.target.value;
     this.setState({ [name]: value }, () => {
       this.validateField(name, value);
       this.highlightText();
+      this.titleSuggestion();
     });
   }
 
@@ -130,8 +141,46 @@ class NewTour extends Component {
     });
   };
 
+  titleSuggestion = () => {
+    var { description } = this.state;
+    if (description === "") return;
+
+    // First suggestion
+    var titleSuggestions = [];
+    var abstract = sum({
+      corpus: description,
+      nWords: 5
+    });
+    titleSuggestions.push(abstract.summary);
+    console.log("First: ", abstract.summary);
+
+    // Second suggestion
+    abstract = sum({
+      corpus: description,
+      nWords: 3
+    });
+
+    if (titleSuggestions.indexOf(abstract.summary) === -1)
+      titleSuggestions.push(abstract.summary);
+    console.log("Second: ", abstract.summary);
+
+    // Third suggestion
+    abstract = sum({
+      corpus: description,
+      nWords: 5,
+      emphasise: ["tour"]
+    });
+    console.log("Third: ", abstract.summary);
+    if (titleSuggestions.indexOf(abstract.summary) === -1)
+      titleSuggestions.push(abstract.summary);
+    this.setState({
+      titleSuggestions: titleSuggestions
+    });
+  };
+
   highlightText = () => {
     var { description, showColor } = this.state;
+
     if (description.length === 0 || !showColor) {
       this.setState({
         backgroundColor: "white"
@@ -380,7 +429,7 @@ class NewTour extends Component {
               The background color indicates how difficult a passage in English
               is to understand.
               <br />
-              Green is text understood by children in grade 5 (11 year olds).
+              Green is text understood by children in grade 5 (11-year olds).
               <br />
               Yellow is understood by Grade 9 students.
               <br />
@@ -482,7 +531,28 @@ class NewTour extends Component {
                         )}`}
                         placeholder="Think of an interesting title"
                         id="title"
+                        value={this.state.title}
                       />
+                      {this.state.titleSuggestions.length > 0 && (
+                        <small className="form-text text-muted">
+                          Suggestions:{" "}
+                          {this.state.titleSuggestions.map(x => (
+                            <button
+                              type="button"
+                              className="btn btn-link"
+                              style={{
+                                fontSize: "90%",
+                                marginBottom: "0.5em",
+                                padding: "0.5em"
+                              }}
+                              onClick={() => this.setTitle(x)}
+                            >
+                              {" "}
+                              {x}{" "}
+                            </button>
+                          ))}
+                        </small>
+                      )}
                     </div>
                     <div className="form-group">
                       <ColorInfo />
