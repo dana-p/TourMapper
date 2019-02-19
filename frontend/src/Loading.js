@@ -1,7 +1,7 @@
 import React from "react";
 
 import { css } from "@emotion/core";
-import { RingLoader } from "react-spinners";
+import { SyncLoader } from "react-spinners";
 
 const override = css`
   display: block;
@@ -11,11 +11,11 @@ const override = css`
 const Loading = () => {
   return (
     <div className="sweet-loading">
-      <RingLoader
+      <SyncLoader
         css={override}
         sizeUnit={"px"}
-        size={150}
-        color={"#123abc"}
+        size={30}
+        color={"#3F51B5"}
         loading="true"
       />
     </div>
