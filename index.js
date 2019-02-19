@@ -99,6 +99,14 @@ monDb.on("error", function() {
 
 /*
  |--------------------------------------
+ | Google Requests
+ |--------------------------------------
+*/
+
+require("./server/api")(app);
+
+/*
+ |--------------------------------------
  | Routes
  |--------------------------------------
  */
@@ -127,14 +135,6 @@ if (process.env.NODE_ENV !== "dev") {
 // server.express.get("*", (req, res) => {
 //   res.sendFile(path.join(__dirname + "/client/public/index.html"));
 // });
-
-/*
- |--------------------------------------
- | Google Requests
- |--------------------------------------
-*/
-
-require("./server/api")(app);
 
 /*
  |--------------------------------------
