@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { Query, Mutation } from "react-apollo";
 import { AllToursQuery, DeleteTour, ToursByUser } from "../GraphQLCalls";
 
-import Button from "@material-ui/core/Button";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 import userData from "../UserService";
 import Loading from "../Loading";
@@ -50,74 +50,73 @@ class MyTours extends Component {
               );
             }
             return data.toursByUser.map(tour => (
-              <div key={tour.id} className="col-sm-12 col-md-4 col-lg-3">
-                <Link to={`/tour/${tour.id}`}>
-                  <div className="card text-white bg-info mb-3 card-height">
-                    <div className="card-header">
-                      Comments: {tour.comments.length}
-                    </div>
-                    <div className="card-body">
-                      <h4 className="card-title">{tour.title}</h4>
-                      <p className="card-text">{tour.description}</p>
-                    </div>
-                  </div>
-                </Link>
-                <Mutation
-                  mutation={DeleteTour}
-                  update={(cache, { data: { deleteTour } }) => {
-                    const cachedTours = cache.readQuery({
-                      query: ToursByUser,
-                      variables: {
-                        userId: userId
-                      }
+              <Mutation
+                mutation={DeleteTour}
+                update={(cache, { data: { deleteTour } }) => {
+                  const cachedTours = cache.readQuery({
+                    query: ToursByUser,
+                    variables: {
+                      userId: userId
+                    }
+                  });
+                  let updatedToursCache = cachedTours.toursByUser.filter(
+                    tour => tour.id !== deleteTour.id
+                  );
+
+                  cache.writeQuery({
+                    query: ToursByUser,
+                    variables: {
+                      userId: userId
+                    },
+                    data: {
+                      toursByUser: updatedToursCache
+                    }
+                  });
+
+                  try {
+                    const alltours = cache.readQuery({
+                      query: AllToursQuery
                     });
-                    let updatedToursCache = cachedTours.toursByUser.filter(
-                      tour => tour.id !== deleteTour.id
-                    );
 
                     cache.writeQuery({
-                      query: ToursByUser,
-                      variables: {
-                        userId: userId
-                      },
+                      query: AllToursQuery,
                       data: {
-                        toursByUser: updatedToursCache
+                        tours: alltours.tours.filter(
+                          tour => tour.id !== deleteTour.id
+                        )
                       }
                     });
-
-                    try {
-                      const alltours = cache.readQuery({
-                        query: AllToursQuery
-                      });
-
-                      cache.writeQuery({
-                        query: AllToursQuery,
-                        data: {
-                          tours: alltours.tours.filter(
-                            tour => tour.id !== deleteTour.id
-                          )
-                        }
-                      });
-                    } catch (error) {
-                      console.log(error);
-                    }
-                  }}
-                >
-                  {deleteTour => (
-                    <Button
-                      onClick={() => {
-                        deleteTour({
-                          variables: {
-                            id: tour.id
-                          }
-                        });
-                      }}
-                    >
-                      Delete
-                    </Button>
-                  )}
-                </Mutation>
-              </div>
+                  } catch (error) {
+                    console.log(error);
+                  }
+                }}
+              >
+                {deleteTour => (
+                  <div key={tour.id} className="col-sm-12 col-md-4 col-lg-3">
+                    <div className="card text-white bg-info mb-3 card-height">
+                      <div className="card-header">
+                        Comments: {tour.comments.length}
+                        <DeleteIcon
+                          style={{ float: "right", cursor: "pointer" }}
+                          onClick={() => {
+                            deleteTour({
+                              variables: {
+                                id: tour.id
+                              }
+                            });
+                          }}
+                        />
+                      </div>
+                      <Link to={`/tour/${tour.id}`} style={{ color: "unset" }}>
+                        <div className="card-body">
+                          <h4 className="card-title">{tour.title}</h4>
+                          <p className="card-text">{tour.description}</p>
+                        </div>
+                      </Link>
+                    </div>
+                  </div>
+                )}
+              </Mutation>
             ));
           }}
         </Query>
