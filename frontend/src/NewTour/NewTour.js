@@ -152,7 +152,6 @@ class NewTour extends Component {
       nWords: 5
     });
     titleSuggestions.push(abstract.summary);
-    console.log("First: ", abstract.summary);
 
     // Second suggestion
     abstract = sum({
@@ -162,7 +161,6 @@ class NewTour extends Component {
 
     if (titleSuggestions.indexOf(abstract.summary) === -1)
       titleSuggestions.push(abstract.summary);
-    console.log("Second: ", abstract.summary);
 
     // Third suggestion
     abstract = sum({
@@ -170,7 +168,6 @@ class NewTour extends Component {
       nWords: 5,
       emphasise: ["tour"]
     });
-    console.log("Third: ", abstract.summary);
     if (titleSuggestions.indexOf(abstract.summary) === -1)
       titleSuggestions.push(abstract.summary);
     this.setState({

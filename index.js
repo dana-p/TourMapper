@@ -134,7 +134,7 @@ if (process.env.NODE_ENV !== "dev") {
  |--------------------------------------
 */
 
-require("./server/google")(app);
+require("./server/api")(app);
 
 /*
  |--------------------------------------
