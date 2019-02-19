@@ -96,7 +96,11 @@ const styles = theme => ({
     }
   },
   nocolor: {
-    color: "unset"
+    color: "unset",
+    "&:hover": {
+      color: "white",
+      textDecoration: "underline"
+    }
   },
   unsetLinkStyle: {
     color: "unset",

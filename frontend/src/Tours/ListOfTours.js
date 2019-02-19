@@ -45,7 +45,7 @@ class ListOfTours extends Component {
         this.state.filteredTours.map(tour => (
           <div key={tour.id} className="col-sm-12 col-md-4 col-lg-3">
             <Link to={`/tour/${tour.id}`}>
-              <div className="card text-white bg-success mb-3">
+              <div className="card text-white bg-info mb-3">
                 <div className="card-header">
                   Comments: {tour.comments.length}
                 </div>

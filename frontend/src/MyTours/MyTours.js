@@ -37,7 +37,7 @@ class MyTours extends Component {
               return (
                 <div className="col-sm-12 col-md-4 col-lg-3">
                   <Link to="/new-tour">
-                    <div className="card text-white bg-success mb-3">
+                    <div className="card text-white bg-info mb-3">
                       <div className="card-header">No tours yet!</div>
                       <div className="card-body">
                         <h4 className="card-title">Create One!</h4>
@@ -50,7 +50,7 @@ class MyTours extends Component {
             return data.toursByUser.map(tour => (
               <div key={tour.id} className="col-sm-12 col-md-4 col-lg-3">
                 <Link to={`/tour/${tour.id}`}>
-                  <div className="card text-white bg-success mb-3">
+                  <div className="card text-white bg-info mb-3">
                     <div className="card-header">
                       Comments: {tour.comments.length}
                     </div>
