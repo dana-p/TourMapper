@@ -13,8 +13,6 @@ import userData from "../UserService";
 import AttractionPopup from "../Popup/Popup";
 import FormErrors from "./FormErrors";
 
-import { key } from "../google";
-
 import syllable from "syllable";
 import sum from "sum";
 import axios from "axios";
