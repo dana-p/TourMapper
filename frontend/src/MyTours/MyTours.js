@@ -9,6 +9,8 @@ import Button from "@material-ui/core/Button";
 import userData from "../UserService";
 import Loading from "../Loading";
 
+import "./MyTours.css";
+
 class MyTours extends Component {
   constructor(props) {
     super(props);
@@ -37,7 +39,7 @@ class MyTours extends Component {
               return (
                 <div className="col-sm-12 col-md-4 col-lg-3">
                   <Link to="/new-tour">
-                    <div className="card text-white bg-info mb-3">
+                    <div className="card text-white bg-info mb-3 card-height">
                       <div className="card-header">No tours yet!</div>
                       <div className="card-body">
                         <h4 className="card-title">Create One!</h4>
@@ -50,7 +52,7 @@ class MyTours extends Component {
             return data.toursByUser.map(tour => (
               <div key={tour.id} className="col-sm-12 col-md-4 col-lg-3">
                 <Link to={`/tour/${tour.id}`}>
-                  <div className="card text-white bg-info mb-3">
+                  <div className="card text-white bg-info mb-3 card-height">
                     <div className="card-header">
                       Comments: {tour.comments.length}
                     </div>
@@ -126,7 +128,7 @@ class MyTours extends Component {
       <div className="container">
         <div className="row">
           <Link to="/new-tour">
-            <div className="card text-white bg-secondary mb-3">
+            <div className="card text-white bg-secondary mb-3 card-height">
               <div className="card-header">Want to add a tour? Start here!</div>
               <div className="card-body">
                 <h4 className="card-title">+ New Tour</h4>
