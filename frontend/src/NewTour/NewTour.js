@@ -17,6 +17,7 @@ import { key } from "../google";
 
 import syllable from "syllable";
 import sum from "sum";
+import axios from "axios";
 
 import InfoIcon from "@material-ui/icons/InfoOutlined";
 import Popup from "reactjs-popup";
@@ -83,6 +84,7 @@ class NewTour extends Component {
     this.handleUserInput(e);
   };
 
+  // DANATODO: Split this into 2 functions.
   handleUserInput(e) {
     const name = e.target.id;
     const value = e.target.value;
@@ -272,93 +274,35 @@ class NewTour extends Component {
   };
 
   checkNearbyAttractions = position => {
-    const urlFirst = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${
-      position.lat
-    },${position.lng}&key=${key}`;
-
+    var self = this;
     var attractions = this.state.attractions;
+    axios
+      .get(`/api/google/nearbyattractions/${position.lat}/${position.lng}`)
+      .then(function(response) {
+        // handle success
+        console.log(response.data);
 
-    fetch(urlFirst)
-      .then(res => {
-        return res.json();
+        var suggestions = [];
+        response.data.forEach(element => {
+          // Do not display attractions that has been added to the tour.
+          if (!attractions.some(attr => attr.title === element.name)) {
+            suggestions.push({
+              key: element.name,
+              value: {
+                lat: element.geometry.location.lat,
+                lng: element.geometry.location.lng
+              }
+            });
+          }
+        });
+        self.setState({
+          suggestions: suggestions
+        });
       })
-      .then(res => {
-        if (res.status === "OK") {
-          var plusCode = res["plus_code"]["compound_code"];
-          var location = plusCode.slice(
-            plusCode.indexOf(" ") + 1,
-            plusCode.length
-          );
-
-          var request = {
-            query: "Point of interest in " + location,
-            radius: "500",
-            location: position,
-            key: key
-          };
-          var service = new window.google.maps.places.PlacesService(
-            document.createElement("div")
-          );
-          service.textSearch(request, (results, status) => {
-            if (status === window.google.maps.places.PlacesServiceStatus.OK) {
-              var suggestions = [];
-              results.forEach(element => {
-                // Do not display attractions that has been added to the tour.
-                if (!attractions.some(attr => attr.title === element.name)) {
-                  suggestions.push({
-                    key: element.name,
-                    value: {
-                      lat: element.geometry.location.lat(),
-                      lng: element.geometry.location.lng()
-                    }
-                  });
-                }
-              });
-              this.setState({
-                suggestions: suggestions
-              });
-              // }
-            }
-          });
-        }
-      })
-      .catch(error => {
+      .catch(function(error) {
+        // handle error
         console.log(error);
-        this.setState({ loading: false });
       });
-  };
-
-  checkNearbyAttractionsOld = position => {
-    var request = {
-      location: position,
-      radius: 1000,
-      type: [
-        "aquarium",
-        "amusement_park",
-        "art_gallery",
-        "city_hall",
-        "church",
-        "mosque",
-        "museum",
-        "shopping_mall",
-        "synagogue",
-        "train_station",
-        "zoo"
-      ],
-      fields: ["name", "geometry", "rating"]
-    };
-
-    var service = new window.google.maps.places.PlacesService(
-      document.createElement("div")
-    );
-
-    service.nearbySearch(request, function(results, status) {
-      if (status === window.google.maps.places.PlacesServiceStatus.OK) {
-        for (var i = 0; i < results.length; i++) {
-          console.log(results[i]); // THIS WORKS!
-        }
-      }
-    });
   };
 
   listPointsOfAttraction = () => {

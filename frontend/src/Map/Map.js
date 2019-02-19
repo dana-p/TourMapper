@@ -97,7 +97,7 @@ class Map extends React.Component {
 
     var input = document.getElementById("searchBox");
 
-    var searchBox = new window.google.maps.places.SearchBox(input);
+    var searchBox = new window.google.maps.places.SearchBox(input); // THIS WON'T WORK WITHOUT HAVING THE API KEY IN THE INDEX.HTML.
 
     searchBox.addListener("places_changed", function() {
       var places = searchBox.getPlaces();

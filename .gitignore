@@ -34,3 +34,7 @@ server/build/Release
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+
+# keys 
+frontend/src/google.js
+server/mongoconfig.js
